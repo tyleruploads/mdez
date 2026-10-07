@@ -10,12 +10,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
     mainLayout = new QVBoxLayout(this);
 
-    label = new QLabel("MDEZ++", this);
+    header = new QLabel("MDEZ++", this);
     
     QFont headerFont("Arial", 16, QFont::Bold);
-    label->setFont(headerFont);
-
-    label->setAlignment(Qt::AlignmentFlag::AlignCenter);
+    header->setFont(headerFont);
+    header->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
     mdHorizontal = new QHBoxLayout();
 
@@ -31,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     mdHorizontal->addWidget(editor);
     mdHorizontal->addWidget(mdView);
  
-    mainLayout->addWidget(label);
+    mainLayout->addWidget(header);
     mainLayout->addLayout(mdHorizontal);
 
 }    

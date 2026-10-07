@@ -21,7 +21,7 @@ public:
 private:
     // Pointers for widgets managed by window
     QVBoxLayout *mainLayout;
-    QLabel *label;
+    QLabel *header;
     QTextEdit *editor;
     QTextBrowser *mdView;
     QHBoxLayout *mdHorizontal;
