@@ -10,6 +10,8 @@ qt_standard_project_setup()
 
 qt_add_executable(mdez
     src/main.cpp
+    src/MainWindow.h
+    src/MainWindow.cpp
 )
 
 target_link_libraries(mdez PRIVATE Qt6::Widgets)
