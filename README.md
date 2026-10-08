@@ -14,7 +14,22 @@ Simply type Markdown into the text entry on the left side of the screen, and it 
 
 > **New to Markdown?** Check out this [cheat sheet](https://dev.to/thetylern/a-markdown-cheat-sheet-for-anywhere-32bp)!
 
-<!-- Section: Installation COMING SOON !-->
+## Installation
+
+Currently, no installation is required! All you need to do is download and open the appropriate binary for your operating system.
+
+| Linux | Windows | macOS |
+| :---: | :---:   | :---: |
+| [mdez-linux](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-linux) | [mdez-windows.exe](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.exe)| Not Supported |
+
+## Note for Linux Users
+
+If you are getting a permission denied error whenever you try to run the binary, you may need to mark it as executable.
+
+```bash
+chmod +x mdez-linux
+```
+
 <!-- Section: Features COMING SOON !-->
 
 ## Contributing
