@@ -1,0 +1,45 @@
+name: Compile and Release MDEZ++
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  compile-and-release:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target_name: mdez-linux
+            binary_path: build/mdez-linux
+          - os: windows-latest
+            target_name: mdez-windows
+            binary_path: build/mdez-windows.exe
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          install-deps: 'true'
+          set-env: 'true'
+
+      - name: Compile MDEZ++
+        run: |
+          cmake -B build -DOUTPUT_NAME=${{ matrix.target_name }}
+          cmake --build build --config Release
+
+      - name: Publish to GitHub Releases
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.binary_path }}
+          generate_release_notes: true
