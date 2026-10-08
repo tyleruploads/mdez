@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  id-token: write
 
 jobs:
   compile:
@@ -20,7 +19,7 @@ jobs:
             binary_path: build/mdez-linux
           - os: windows-latest
             target_name: mdez-windows
-            binary_path: build/**/mdez-windows.exe
+            binary_path: build/Release/mdez-windows.exe
     runs-on: ${{ matrix.os }}
 
     steps:
