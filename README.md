@@ -2,6 +2,10 @@
 
 MDEZ++ is a lightweight Markdown editor written in C++ while using the Qt Graphical Framework.
 
+[![GitHub License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/tyleruploads/mdez/blob/main/LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/tyleruploads/mdez)](https://github.com/tyleruploads/mdez/issues)
+![GitHub Release](https://img.shields.io/github/v/release/tyleruploads/mdez?label=Version)
+
 <img src="./media/docs/hero.png" alt="Hero Image for MDEZ++" width="700"/>
 
 ## Usage
