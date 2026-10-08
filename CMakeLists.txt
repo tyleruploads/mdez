@@ -15,3 +15,7 @@ qt_add_executable(mdez
 )
 
 target_link_libraries(mdez PRIVATE Qt6::Widgets)
+
+target_compile_definitions(mdez PRIVATE
+    APP_VERSION="${PROJECT_VERSION}"
+)

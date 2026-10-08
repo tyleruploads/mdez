@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     mdView = new QTextBrowser(this);
 
+    versionLabel = new QLabel("v" APP_VERSION, this);
+
     connect(editor, &QTextEdit::textChanged, this, [this]() {
         mdView->setMarkdown(editor->toPlainText());
     });
@@ -32,5 +34,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
  
     mainLayout->addWidget(header);
     mainLayout->addLayout(mdHorizontal);
+    mainLayout->addWidget(versionLabel);
 
 }    
