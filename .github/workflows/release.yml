@@ -33,6 +33,8 @@ jobs:
         with:
           install-deps: 'true'
           set-env: 'true'
+          cache: 'true'
+          cache-key-prefix: 'qt-binaries'
 
       - name: Compile MDEZ++
         run: |
@@ -47,6 +49,16 @@ jobs:
 
           chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-qt-x86_64.AppImage
 
+          python3 -c "import base64; open('mdez-linux.png', 'wb').write(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAPElEQVR42u3BAQEAAACCIP+vbhhGEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC4A31XAAEB/U0DAAAAAElFTkSuQmCC'))"
+
+          echo "[Desktop Entry]" > mdez-linux.desktop
+          echo "Type=Application" >> mdez-linux.desktop
+          echo "Name=MDEZ++" >> mdez-linux.desktop
+          echo "Exec=mdez-linux" >> mdez-linux.desktop
+          echo "Icon=mdez-linux" >> mdez-linux.desktop
+          echo "Categories=Utility;" >> mdez-linux.desktop
+
+
           export QMAKE=$QT_ROOT_DIR/bin/qmake
           export EXTRA_QT_PLUGIN_ARGS="--appimage-extract-and-run"
 
@@ -54,7 +66,8 @@ jobs:
           --appimage-extract-and-run \
           --appdir=AppDir \
           --executable=build/mdez-linux \
-          --create-desktop-file \
+          --desktop-file=mdez-linux.desktop \
+          --icon-file=mdez-linux.png \
           --plugin=qt \
           --output=appimage
 
