@@ -17,7 +17,7 @@ jobs:
           - os: ubuntu-latest
             target_name: mdez-linux
             binary_path: build/mdez-linux
-            artifact_path: './*.AppImage'
+            artifact_path: build/MDEZ++-x86_64.AppImage
           - os: windows-latest
             target_name: mdez-windows
             binary_path: build/Release/mdez-windows.exe
@@ -69,6 +69,8 @@ jobs:
           --plugin=qt \
           --output=appimage
 
+          mv MDEZ++-*.AppImage ${{ matrix.artifact_path }
+
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -91,6 +93,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            *.AppImage
+            ${{ matrix.artifact_path }}
             mdez-windows.exe
           generate_release_notes: true
