@@ -65,7 +65,7 @@ jobs:
           --appdir=AppDir \
           --executable=build/mdez-linux \
           --desktop-file=mdez-linux.desktop \
-          --icon-file=media/docs/mdez-linux.png \
+          --icon-file=${{ github.workspace }}/media/docs/mdez-linux.png \
           --plugin=qt \
           --output=appimage
 
