@@ -49,7 +49,7 @@ jobs:
 
           chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-qt-x86_64.AppImage
 
-          python3 -c "import base64; open('mdez-linux.png', 'wb').write(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAPElEQVR42u3BAQEAAACCIP+vbhhGEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC4A31XAAEB/U0DAAAAAElFTkSuQmCC'))"
+          python3 -c "import base64; open('mdez-linux.png', 'wb').write(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdom6kAAAAUSURBVHhe7cEBDQAAAMKg90t1hkUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOBv2IAAB1yS48QAAAABJRU5ErkJggg=='))"
 
           echo "[Desktop Entry]" > mdez-linux.desktop
           echo "Type=Application" >> mdez-linux.desktop
