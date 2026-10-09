@@ -69,7 +69,8 @@ jobs:
           --plugin=qt \
           --output=appimage
 
-          mv MDEZ++-*.AppImage ${{ matrix.artifact_path }
+          mv MDEZ++-*.AppImage ${{ matrix.artifact_path }}
+
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
