@@ -21,7 +21,7 @@ jobs:
           - os: windows-latest
             target_name: mdez-windows
             binary_path: build/Release/mdez-windows.exe
-            artifact_path: build/Release/mdez-windows.exe
+            artifact_path: build/Release/mdez-windows.zip
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -71,6 +71,12 @@ jobs:
 
           mv MDEZ++-*.AppImage ${{ matrix.artifact_path }}
 
+        - name: Prepare Standalone Windows Executable
+          if: matrix.target_name == 'mdez-windows'
+          run: |
+            windeployqt --release --compiler-runtime --no-svg ${{ matrix.binary_path }}
+
+            zip -r ${{ matrix.artifact_path }} build/Release
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
@@ -84,16 +90,16 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
-      - name: Download All Artifacts
+      - name: Download Linux and Windows Artifact
         uses: actions/download-artifact@v4
         with:
-          pattern: binary-*
           merge-multiple: true
+          pattern: binary-mdez-*
 
       - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ${{ matrix.artifact_path }}
-            mdez-windows.exe
+            MDEZ++-x86_64.AppImage
+            mdez-windows.zip
           generate_release_notes: true
