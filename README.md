@@ -14,6 +14,13 @@ Simply type Markdown into the text entry on the left side of the screen, and it 
 
 > **New to Markdown?** Check out this [cheat sheet](https://dev.to/thetylern/a-markdown-cheat-sheet-for-anywhere-32bp)!
 
+### Keyboard Combinations
+| Action | Shortcut | Description |
+| :---: | :---: | :---: |
+| Open File | `Ctrl / Cmd + O` | Open an existing document |
+| Save As | `Ctrl / Cmd + Shift + S` | Save the current document under a new name or location |
+| Save | `Ctrl / Cmd + S` | Save changes to the current document |
+
 ## Installation
 
 Currently, no installation is required! All you need to do is download and open the appropriate binary for your operating system.

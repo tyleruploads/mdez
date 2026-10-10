@@ -41,8 +41,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     saveFileAction->setStatusTip(tr("Save changes to the current document"));
 
     openFileAction->setShortcut(QKeySequence::Open);
-    saveAsFileAction->setShortcut(QKeySequence::SaveAs);
-    saveFileAction->setShortcut(QKeySequence::Save);
+    saveAsFileAction->setShortcut(QKeySequence(tr("Ctrl+Shift+S")));
+    saveFileAction->setShortcut(QKeySequence(tr("Ctrl+S")));
    
     openFileAction->setShortcutContext(Qt::ApplicationShortcut);
     saveAsFileAction->setShortcutContext(Qt::ApplicationShortcut);
