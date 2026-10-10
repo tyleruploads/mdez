@@ -20,15 +20,26 @@ Currently, no installation is required! All you need to do is download and open 
 
 | Linux | Windows | macOS |
 | :---: | :---:   | :---: |
-| [mdez-linux](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-linux) | [mdez-windows.exe](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.exe)| Not Supported |
+| [MDEZ++-x86_64.AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/mdez++-x86_64.appimage) | [mdez-windows.zip](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported |
 
 ## Note for Linux Users
 
-If you are getting a permission denied error whenever you try to run the binary, you may need to mark it as executable.
+You must mark the AppImage as executable before it can be ran!
 
 ```bash
-chmod +x mdez-linux
+chmod +x MDEZ++-x86_64.AppImage
 ```
+
+## Note for Windows Users
+
+If you do not know what to do with the zip file, follow these steps.
+
+1. Download [mdez-windows.zip](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip) and extract it
+2. Open the extracted folder, navigate to build -> Release, and then run the file named `mdez-windows.exe` (the file extension may not be automatically shown for you)
+3. If a SmartScreen window is displayed:
+    + Click More Info under the text
+    + Click the Run Anyway button at the bottom
+    + Note: This is normal behavior for open-source software not signed with a commercial Microsoft developer key
 
 <!-- Section: Features COMING SOON !-->
 
