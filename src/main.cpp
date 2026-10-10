@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 
     MainWindow window;
     window.resize(800, 800);
-    window.setWindowTitle("MDEZ++"); 
+    window.setWindowTitle("Untitled | MDEZ++"); 
 
     window.show();
 
