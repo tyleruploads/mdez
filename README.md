@@ -27,7 +27,7 @@ Currently, no installation is required! All you need to do is download and open 
 
 | Linux | Windows | macOS |
 | :---: | :---:   | :---: |
-| [MDEZ++-x86_64.AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/mdez++-x86_64.appimage) | [mdez-windows.zip](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported |
+| [MDEZ++-x86_64.AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage) | [mdez-windows.zip](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported |
 
 ## Note for Linux Users
 
