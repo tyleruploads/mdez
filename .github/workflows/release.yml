@@ -72,8 +72,9 @@ jobs:
           mv MDEZ++-*.AppImage ${{ matrix.artifact_path }}
 
       - name: Prepare Standalone Windows Executable
-        if: matrix.target_name == 'mdez-windows'
+        if: matrix.target_name == 'mdez-linux'
         run: |
+          # This is running on linux because of the zip command
           windeployqt --release --compiler-runtime --no-svg ${{ matrix.binary_path }}
 
           zip -r ${{ matrix.artifact_path }} build/Release
