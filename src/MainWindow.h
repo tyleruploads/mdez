@@ -13,6 +13,7 @@ class QMenuBar;
 class QMenu;
 class QAction;
 class QString;
+class QUrl;
 
 class MainWindow : public QWidget
 {
@@ -25,6 +26,10 @@ public:
 private slots:
     void updateMarkdown();
     void updateWindowTitle();
+    void showAboutDialog();
+    void showFullMitLicense();
+    void openLink(const QUrl &link);
+    void openKeyboardCombos();
     void handleOpenFile();
     void handleSaveAsFile();
     void handleSaveFile();
@@ -36,6 +41,7 @@ private:
     QLabel *versionLabel;
     QMenuBar *menuBar;
     QMenu *fileMenu;
+    QMenu *helpMenu;
     QTextEdit *editor;
     QTextBrowser *mdView;
     QHBoxLayout *mdHorizontal;
@@ -43,6 +49,14 @@ private:
     QAction *openFileAction;
     QAction *saveAsFileAction;
     QAction *saveFileAction;
+
+    QAction *aboutAction;
+    QAction *mitLicenseAction;
+    QAction *aboutQtAction;
+    QAction *mdCheatSheetAction;
+    QAction *keyboardCombosAction;
+    QAction *reportIssueAction;
+    QAction *checkUpdatesAction;
 
     bool unsavedFileChanges;
     QString currentFilePath;

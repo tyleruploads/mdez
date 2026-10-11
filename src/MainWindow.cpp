@@ -9,6 +9,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QFileDialog>
+#include <QMessageBox>
+#include <QDesktopServices>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
@@ -52,6 +54,29 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     this->addAction(saveAsFileAction);
     this->addAction(saveFileAction);
 
+    helpMenu = new QMenu(this);
+    helpMenu->setTitle("Help");
+
+    aboutAction = new QAction(this);
+    mitLicenseAction = new QAction(this);
+    aboutQtAction = new QAction(this);
+    mdCheatSheetAction = new QAction(this);
+    keyboardCombosAction = new QAction(this);
+    reportIssueAction = new QAction(this);
+    checkUpdatesAction = new QAction(this);
+
+    aboutAction->setText(tr("About MDEZ++"));
+    mitLicenseAction->setText(tr("MDEZ++ License"));
+    mdCheatSheetAction->setText(tr("Markdown Cheat Sheet"));
+    keyboardCombosAction->setText(tr("Keyboard Combonations"));
+    reportIssueAction->setText(tr("Report Issue"));
+    checkUpdatesAction->setText(tr("Check for Updates"));
+    aboutQtAction->setText(tr("About Qt"));
+
+    aboutAction->setStatusTip(tr("Show copyright, license, and version information for MDEZ++"));
+    mitLicenseAction->setStatusTip(tr("Show full MIT license for MDEZ++"));
+    aboutQtAction->setStatusTip(tr("Show information about the Qt framework and its LGPL license"));
+
     mdHorizontal = new QHBoxLayout();
 
     editor = new QTextEdit(this);
@@ -67,8 +92,27 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     connect(saveAsFileAction, &QAction::triggered, this, &MainWindow::handleSaveAsFile);
     connect(saveFileAction, &QAction::triggered, this, &MainWindow::handleSaveFile);
 
+    connect(aboutAction, &QAction::triggered, this, &MainWindow::showAboutDialog);
+    connect(mitLicenseAction, &QAction::triggered, this, &MainWindow::showFullMitLicense);
+    connect(aboutQtAction, &QAction::triggered, this, [this]() {
+        QMessageBox::aboutQt(this, tr("About Qt"));
+    });
+    connect(mdCheatSheetAction, &QAction::triggered, this, [this]() {
+            this->openLink(QUrl("https://dev.to/thetylern/a-markdown-cheat-sheet-for-anywhere-32bp"));
+    });
+    connect(keyboardCombosAction, &QAction::triggered, this, &MainWindow::openKeyboardCombos);
+    connect(reportIssueAction, &QAction::triggered, this, [this]() {
+        this->openLink(QUrl("https://github.com/tyleruploads/mdez/issues/new"));
+    });
+    connect(checkUpdatesAction, &QAction::triggered, this, [this]() {
+        this->openLink(QUrl("https://github.com/tyleruploads/mdez/releases/latest/"));
+    });
+
     fileMenu->addActions({openFileAction, saveAsFileAction, saveFileAction});
+    helpMenu->addActions({aboutAction, mitLicenseAction, aboutQtAction, mdCheatSheetAction, keyboardCombosAction, reportIssueAction, checkUpdatesAction});
+
     menuBar->addMenu(fileMenu);
+    menuBar->addMenu(helpMenu);
 
     mdHorizontal->addWidget(editor);
     mdHorizontal->addWidget(mdView);
@@ -95,7 +139,88 @@ void MainWindow::updateWindowTitle()
         displayPath += "*";
 
     setWindowTitle(QString("%1 | MDEZ++").arg(displayPath));
-}    
+}
+
+void MainWindow::showAboutDialog()
+{
+    QString title = tr("About & License");
+    QString text = tr(
+        "<h3>MDEZ++ "
+        APP_VERSION
+        "</h3>"
+        "<p>Copyright (c) 2026 Tyler N. <a href=\"https://github.com/tyleruploads\">https://github.com/tyleruploads</a>.</p>"
+
+        "<h4>Application License</h4>"
+        "<p>This application is open-source software licensed under the <b>MIT License</b>. "
+        "For more details, use the 'MDEZ++ License' option in the Help menu or visit "
+        "<a href=\"https://github.com/tyleruploads/mdez\">https://github.com/tyleruploads/mdez</a>.</p>"
+
+        "<hr/>"
+
+        "<h4>Third-Party Components</h4>"
+        "<p>This application uses the <b>Qt Toolkit</b> framework under the terms of the "
+        "GNU Lesser General Public License (LGPLv3).</p>"
+        "<p>Qt is a registered trademark of The Qt Company Ltd. and/or its subsidiaries. The Qt framework is provided 'as is' without any express or implied warranty.</p>"
+        "<p>For more details, use the 'About Qt' option in the Help menu or visit "
+        "<a href=\"https://qt.io/licensing\">https://qt.io/licensing</a></p>"
+    );
+
+    QMessageBox::about(this, title, text);
+}
+
+void MainWindow::showFullMitLicense()
+{
+    QString title = tr("Mit License - MDEZ++");
+    QString mitText = tr(R"(
+Copyright (c) 2026 Tyler N. <https://github.com/tyleruploads>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+)");
+    QMessageBox::about(this, title, mitText);
+}
+
+void MainWindow::openKeyboardCombos()
+{
+    QString text = tr(R"(
+<table>
+    <tr>
+        <td>Action</td>
+        <td>Shortcut</td>
+        <td>Description</td>
+    </tr>
+    <tr>
+        <td>Open File</td>
+        <td>Ctrl / Cmd + O</td>
+        <td>Open an existing document</td>
+    </tr>
+    <tr>
+        <td>Save As</td>
+        <td>Ctrl / Cmd + Shift + S</td>
+        <td>Save the current document under a new name or location</td>
+    </tr>
+    <tr>
+        <td>Save</td>
+        <td>Ctrl / Cmd + S</td>
+        <td>Save changes to the current document</td>
+    </tr>
+</table>
+)");
+    QMessageBox::information(this, "Keyboard Combinations", text);
+}
+
+void MainWindow::openLink(const QUrl &link)
+{
+    bool success = QDesktopServices::openUrl(link);
+
+    if (!success) {
+        QString text = tr("Failed to open link: %1").arg(link.toString());
+        QMessageBox::critical(this, "Error", text);
+    }
+}
 
 void MainWindow::handleOpenFile()
 {
