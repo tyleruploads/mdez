@@ -86,6 +86,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     editor->setPlaceholderText("Type here");
 
     mdView = new QTextBrowser(this);
+    mdView->setOpenExternalLinks(true); // Makes links open in browser
 
     statusBar = new QStatusBar(this);
     versionLabel = new QLabel(QString("v" APP_VERSION), this);
