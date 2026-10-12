@@ -15,7 +15,6 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QStatusBar>
-#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
