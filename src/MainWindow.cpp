@@ -71,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     aboutAction->setText(tr("About MDEZ++"));
     mitLicenseAction->setText(tr("MDEZ++ License"));
     mdCheatSheetAction->setText(tr("Markdown Cheat Sheet"));
-    keyboardCombosAction->setText(tr("Keyboard Combonations"));
+    keyboardCombosAction->setText(tr("Keyboard Combinations"));
     reportIssueAction->setText(tr("Report Issue"));
     checkUpdatesAction->setText(tr("Check for Updates"));
     aboutQtAction->setText(tr("About Qt"));
