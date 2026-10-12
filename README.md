@@ -1,6 +1,6 @@
 # MDEZ++
 
-MDEZ++ is a lightweight Markdown editor written in C++ while using the Qt Graphical Framework.
+MDEZ++ (mdez) is an **open-source, lightweight, cross-platform C++20 and Qt GUI Markdown editor.** Instead of a WYSIWYG editor, MDEZ++ renders a real-time live preview of your text in a split-screen pane using a fast, native, and minimal GUI.
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/tyleruploads/mdez/blob/main/LICENSE)
 [![GitHub Issues](https://img.shields.io/github/issues/tyleruploads/mdez)](https://github.com/tyleruploads/mdez/issues)
@@ -8,32 +8,32 @@ MDEZ++ is a lightweight Markdown editor written in C++ while using the Qt Graphi
 [![C++](https://img.shields.io/badge/C%2B%2B-20-%2300599C?logo=c%2B%2B)](https://isocpp.org/)
 [![Qt](https://img.shields.io/badge/Qt-6-%2341CD52?logo=qt&logoColor=white)](https://www.qt.io/)
 
-<img src="./media/docs/hero.png" alt="Hero Image for MDEZ++" width="700"/>
+<img src="./media/docs/hero.png" alt="MDEZ++ C++20 and Qt Markdown editor interface with live preview" width="700"/>
 
 ## Usage
 
-Simply type Markdown into the text entry on the left side of the screen, and it will automatically come out on the right side!
+Write raw Markdown on the left to **preview** rendered text on the right.
 
 > **New to Markdown?** Check out this [cheat sheet](https://dev.to/thetylern/a-markdown-cheat-sheet-for-anywhere-32bp)!
 
-### Keyboard Combinations
+### Keyboard Shortcuts
 | Action | Shortcut | Description |
 | :---: | :---: | :---: |
 | Open File | `Ctrl / Cmd + O` | Open an existing document |
 | Save As | `Ctrl / Cmd + Shift + S` | Save the current document under a new name or location |
 | Save | `Ctrl / Cmd + S` | Save changes to the current document |
 
-## Installation
+## Downloads & Installation
 
-Currently, no installation is required! All you need to do is download and open the appropriate binary for your operating system.
+Currently, **no installation is required**! All you need to do is download and open the appropriate **portable, pre-compiled binary** for your operating system.
 
 | Linux | Windows | macOS |
 | :---: | :---:   | :---: |
-| [MDEZ++-x86_64.AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage) | [mdez-windows.zip](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported |
+| [MDEZ++ AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage) | [MDEZ++ Windows Executable](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported |
 
 ## Note for Linux Users
 
-You must mark the AppImage as executable before it can be ran!
+You must mark the **standalone AppImage** as executable before it can be run!
 
 ```bash
 chmod +x MDEZ++-x86_64.AppImage
