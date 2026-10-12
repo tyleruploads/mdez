@@ -76,9 +76,13 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     checkUpdatesAction->setText(tr("Check for Updates"));
     aboutQtAction->setText(tr("About Qt"));
 
-    aboutAction->setStatusTip(tr("Show copyright, license, and version information for MDEZ++"));
-    mitLicenseAction->setStatusTip(tr("Show full MIT license for MDEZ++"));
-    aboutQtAction->setStatusTip(tr("Show information about the Qt framework and its LGPL license"));
+    aboutAction->setStatusTip(tr("Show version, copyright, and licnesing information for MDEZ++"));
+    mitLicenseAction->setStatusTip(tr("Display the full text of the MIT License for MDEZ++"));
+    aboutQtAction->setStatusTip(tr("Show information about the Qt framework and its license"));
+    mdCheatSheetAction->setStatusTip(tr("Open a quick reference cheat sheet for Markdown syntax"));
+    keyboardCombosAction->setStatusTip(tr("View keyboard shortcuts for MDEZ++"));
+    reportIssueAction->setStatusTip(tr("Open the page to make a GitHub Issue in the MDEZ++ Repository"));
+    checkUpdatesAction->setStatusTip(tr("Open the the GitHub Releases page for MDEZ++ to check for updates"));
 
     mdHorizontal = new QHBoxLayout();
 
