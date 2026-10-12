@@ -14,6 +14,7 @@ class QMenu;
 class QAction;
 class QString;
 class QUrl;
+class QStatusBar;
 
 class MainWindow : public QWidget
 {
@@ -30,6 +31,7 @@ private slots:
     void showFullMitLicense();
     void openLink(const QUrl &link);
     void openKeyboardCombos();
+    int countWords();
     void handleOpenFile();
     void handleSaveAsFile();
     void handleSaveFile();
@@ -38,7 +40,6 @@ private:
     // Pointers for widgets managed by window
     QVBoxLayout *mainLayout;
     QLabel *header;
-    QLabel *versionLabel;
     QMenuBar *menuBar;
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -57,6 +58,14 @@ private:
     QAction *keyboardCombosAction;
     QAction *reportIssueAction;
     QAction *checkUpdatesAction;
+
+    QStatusBar *statusBar;
+    QLabel *versionLabel;
+    QLabel *wcLabel;
+    QLabel *pathLabel;
+    QWidget *statusSpacer1;
+    QWidget *statusSpacer2;
+
 
     bool unsavedFileChanges;
     QString currentFilePath;

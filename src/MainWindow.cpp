@@ -6,11 +6,15 @@
 #include <QLabel>
 #include <QTextEdit>
 #include <QTextBrowser>
+#include <QTextDocument>
+#include <QStringList>
+#include <QRegularExpression>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QStatusBar>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
@@ -84,7 +88,16 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     mdView = new QTextBrowser(this);
 
-    versionLabel = new QLabel("v" APP_VERSION, this);
+    statusBar = new QStatusBar(this);
+    versionLabel = new QLabel(QString("v" APP_VERSION), this);
+    wcLabel = new QLabel("Words: 0", this);
+    pathLabel = new QLabel("Untitled", this);
+
+    statusSpacer1 = new QWidget(this);
+    statusSpacer1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+    statusSpacer2 = new QWidget(this);
+    statusSpacer2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     connect(editor, &QTextEdit::textChanged, this, &MainWindow::updateMarkdown);
 
@@ -116,11 +129,17 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     mdHorizontal->addWidget(editor);
     mdHorizontal->addWidget(mdView);
+
+    statusBar->addWidget(versionLabel);
+    statusBar->addWidget(statusSpacer1, 1); // Expands
+    statusBar->addWidget(wcLabel);
+    statusBar->addWidget(statusSpacer2, 1); // Expands
+    statusBar->addWidget(pathLabel);
  
     mainLayout->addWidget(header);
     mainLayout->addWidget(menuBar);
     mainLayout->addLayout(mdHorizontal);
-    mainLayout->addWidget(versionLabel);
+    mainLayout->addWidget(statusBar);
 
 }
 
@@ -129,6 +148,10 @@ void MainWindow::updateMarkdown()
    mdView->setMarkdown(editor->toPlainText());
    unsavedFileChanges = true;
    MainWindow::updateWindowTitle();
+
+    int wordCount = countWords();
+    QString wcLabelText = QString("Words: %1").arg(wordCount);
+    wcLabel->setText(wcLabelText);
 }
 
 void MainWindow::updateWindowTitle()
@@ -139,6 +162,7 @@ void MainWindow::updateWindowTitle()
         displayPath += "*";
 
     setWindowTitle(QString("%1 | MDEZ++").arg(displayPath));
+    pathLabel->setText(displayPath);
 }
 
 void MainWindow::showAboutDialog()
@@ -220,6 +244,17 @@ void MainWindow::openLink(const QUrl &link)
         QString text = tr("Failed to open link: %1").arg(link.toString());
         QMessageBox::critical(this, "Error", text);
     }
+}
+
+int MainWindow::countWords()
+{
+    QTextDocument doc;
+    doc.setMarkdown(editor->toPlainText());
+
+    QString text = doc.toPlainText();
+    QStringList words = text.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+
+    return words.size();
 }
 
 void MainWindow::handleOpenFile()
