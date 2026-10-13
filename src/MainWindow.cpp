@@ -7,6 +7,7 @@
 #include <QTextEdit>
 #include <QTextBrowser>
 #include <QTextDocument>
+#include <QTextCursor>
 #include <QStringList>
 #include <QRegularExpression>
 #include <QVBoxLayout>
@@ -15,6 +16,7 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QStatusBar>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
@@ -95,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     statusBar = new QStatusBar(this);
     versionLabel = new QLabel(QString("v" APP_VERSION), this);
     wcLabel = new QLabel("Words: 0", this);
+    posLabel = new QLabel("1,1", this);
     pathLabel = new QLabel("Untitled", this);
 
     statusSpacer1 = new QWidget(this);
@@ -103,7 +106,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     statusSpacer2 = new QWidget(this);
     statusSpacer2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
+    statusSpacer3 = new QWidget(this);
+    statusSpacer3->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
     connect(editor, &QTextEdit::textChanged, this, &MainWindow::updateMarkdown);
+
+    connect(editor, &QTextEdit::cursorPositionChanged, this, &MainWindow::updatePosLabel);
 
     connect(openFileAction, &QAction::triggered, this, &MainWindow::handleOpenFile);
     connect(saveAsFileAction, &QAction::triggered, this, &MainWindow::handleSaveAsFile);
@@ -138,6 +146,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     statusBar->addWidget(statusSpacer1, 1); // Expands
     statusBar->addWidget(wcLabel);
     statusBar->addWidget(statusSpacer2, 1); // Expands
+    statusBar->addWidget(posLabel);
+    statusBar->addWidget(statusSpacer3, 1); // Expands
     statusBar->addWidget(pathLabel);
  
     mainLayout->addWidget(header);
@@ -260,6 +270,16 @@ int MainWindow::countWords()
 
     return words.size();
 }
+
+void MainWindow::updatePosLabel() {
+    QTextCursor cur = editor->textCursor();
+
+    QString line = QString::number(cur.blockNumber() + 1);
+    QString col = QString::number(cur.positionInBlock() + 1);
+
+    posLabel->setText(QString("%1, %2").arg(line, col));
+}
+
 
 void MainWindow::handleOpenFile()
 {

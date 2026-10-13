@@ -32,6 +32,7 @@ private slots:
     void openLink(const QUrl &link);
     void openKeyboardCombos();
     int countWords();
+    void updatePosLabel();
     void handleOpenFile();
     void handleSaveAsFile();
     void handleSaveFile();
@@ -62,9 +63,11 @@ private:
     QStatusBar *statusBar;
     QLabel *versionLabel;
     QLabel *wcLabel;
+    QLabel *posLabel;
     QLabel *pathLabel;
     QWidget *statusSpacer1;
     QWidget *statusSpacer2;
+    QWidget *statusSpacer3;
 
 
     bool unsavedFileChanges;
