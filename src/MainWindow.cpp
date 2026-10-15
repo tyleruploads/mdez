@@ -173,9 +173,26 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
 void MainWindow::updateMarkdown()
 {
-   mdView->setMarkdown(editor->toPlainText());
-   unsavedFileChanges = true;
-   MainWindow::updateWindowTitle();
+    QString mdText = editor->toPlainText();
+
+    QTextDocument tempDoc;
+    tempDoc.setMarkdown(mdText);
+    QString rawHtml = tempDoc.toHtml();
+
+    QRegularExpression qtBlockquoteRegex("<p style=\" margin-top:[^;]+; margin-bottom:[^;]+; margin-left:40px; margin-right:40px; [^\"]*\">(.*?)</p>");
+
+    QString tableReplacement =
+        "<table width=\"100%\" cellpadding=\"8\" style=\"margin: 6px 0px;\">"
+        "<tr><td bgcolor=\"#f0f0f0\" style=\"border-left: 4px solid #007acc;\">"
+        "<span style=\"color: #555555;\">\\1</span>"
+        "</td></tr>"
+        "</table>";
+
+    rawHtml.replace(qtBlockquoteRegex, tableReplacement);
+
+    mdView->setHtml(rawHtml);
+    unsavedFileChanges = true;
+    MainWindow::updateWindowTitle();
 
     int wordCount = countWords();
     QString wcLabelText = QString("Words: %1").arg(wordCount);
