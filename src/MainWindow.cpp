@@ -7,6 +7,7 @@
 #include <QTextEdit>
 #include <QTextBrowser>
 #include <QTextDocument>
+#include <QTextDocumentWriter>
 #include <QTextCursor>
 #include <QStringList>
 #include <QRegularExpression>
@@ -41,16 +42,19 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     saveAsFileAction = new QAction(this);
     saveFileAction = new QAction(this);
     printAction = new QAction(this);
+    exportHtmlAction = new QAction(this);
 
     openFileAction->setText(tr("Open File"));
     saveAsFileAction->setText(tr("Save As"));
     saveFileAction->setText(tr("Save"));
     printAction->setText(tr("Print"));
+    exportHtmlAction->setText(tr("Export as HTML"));
 
     openFileAction->setStatusTip(tr("Open an existing document"));
     saveAsFileAction->setStatusTip(tr("Save the current document under a new name or location"));
     saveFileAction->setStatusTip(tr("Save changes to the current document"));
     printAction->setStatusTip(tr("Print the current document"));
+    exportHtmlAction->setStatusTip(tr("Export current document in the HTML format"));
 
     openFileAction->setShortcut(QKeySequence::Open);
     saveAsFileAction->setShortcut(QKeySequence(tr("Ctrl+Shift+S")));
@@ -125,6 +129,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     connect(saveAsFileAction, &QAction::triggered, this, &MainWindow::handleSaveAsFile);
     connect(saveFileAction, &QAction::triggered, this, &MainWindow::handleSaveFile);
     connect(printAction, &QAction::triggered, this, &MainWindow::printDocument);
+    connect(exportHtmlAction, &QAction::triggered, this, &MainWindow::exportHtml);
 
     connect(aboutAction, &QAction::triggered, this, &MainWindow::showAboutDialog);
     connect(mitLicenseAction, &QAction::triggered, this, &MainWindow::showFullMitLicense);
@@ -142,7 +147,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
         this->openLink(QUrl("https://github.com/tyleruploads/mdez/releases/latest/"));
     });
 
-    fileMenu->addActions({openFileAction, saveAsFileAction, saveFileAction, printAction});
+    fileMenu->addActions({openFileAction, saveAsFileAction, saveFileAction, printAction, exportHtmlAction});
     helpMenu->addActions({aboutAction, mitLicenseAction, aboutQtAction, mdCheatSheetAction, keyboardCombosAction, reportIssueAction, checkUpdatesAction});
 
     menuBar->addMenu(fileMenu);
@@ -371,5 +376,29 @@ void MainWindow::printDocument()
     QPrintDialog printDialog(&printer, this);
     if (printDialog.exec() == QDialog::Accepted) {
         mdView->print(&printer);
+    }
+}
+
+void MainWindow::exportHtml()
+{
+    QTextDocument *doc = mdView->document();
+
+    QString htmlSavePath = QFileDialog::getSaveFileName(this,
+        tr("Save as HTML File"),
+        "document.html",
+        tr("HTML files (*.html);;All Files (*)")
+    );
+
+    if (htmlSavePath.isEmpty())
+        return;
+
+    QFile file(htmlSavePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
+
+    QTextDocumentWriter writer(htmlSavePath);
+    if (!writer.write(doc)) {
+        QString text = tr("Failed to save document as HTML to: %1").arg(htmlSavePath);
+        QMessageBox::critical(this, "Error", text);
     }
 }

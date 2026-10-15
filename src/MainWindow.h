@@ -37,6 +37,7 @@ private slots:
     void handleSaveAsFile();
     void handleSaveFile();
     void printDocument();
+    void exportHtml();
 
 private:
     // Pointers for widgets managed by window
@@ -53,6 +54,7 @@ private:
     QAction *saveAsFileAction;
     QAction *saveFileAction;
     QAction *printAction;
+    QAction *exportHtmlAction;
 
     QAction *aboutAction;
     QAction *mitLicenseAction;
