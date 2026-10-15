@@ -16,6 +16,8 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QStatusBar>
+#include <QPrinter>
+#include <QPrintDialog>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
@@ -38,26 +40,32 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     openFileAction = new QAction(this);
     saveAsFileAction = new QAction(this);
     saveFileAction = new QAction(this);
+    printAction = new QAction(this);
 
     openFileAction->setText(tr("Open File"));
     saveAsFileAction->setText(tr("Save As"));
     saveFileAction->setText(tr("Save"));
+    printAction->setText(tr("Print"));
 
     openFileAction->setStatusTip(tr("Open an existing document"));
     saveAsFileAction->setStatusTip(tr("Save the current document under a new name or location"));
     saveFileAction->setStatusTip(tr("Save changes to the current document"));
+    printAction->setStatusTip(tr("Print the current document"));
 
     openFileAction->setShortcut(QKeySequence::Open);
     saveAsFileAction->setShortcut(QKeySequence(tr("Ctrl+Shift+S")));
     saveFileAction->setShortcut(QKeySequence(tr("Ctrl+S")));
+    printAction->setShortcut(QKeySequence::Print);
    
     openFileAction->setShortcutContext(Qt::ApplicationShortcut);
     saveAsFileAction->setShortcutContext(Qt::ApplicationShortcut);
     saveFileAction->setShortcutContext(Qt::ApplicationShortcut);
+    printAction->setShortcutContext(Qt::ApplicationShortcut);
 
     this->addAction(openFileAction);
     this->addAction(saveAsFileAction);
     this->addAction(saveFileAction);
+    this->addAction(printAction);
 
     helpMenu = new QMenu(this);
     helpMenu->setTitle("Help");
@@ -116,6 +124,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     connect(openFileAction, &QAction::triggered, this, &MainWindow::handleOpenFile);
     connect(saveAsFileAction, &QAction::triggered, this, &MainWindow::handleSaveAsFile);
     connect(saveFileAction, &QAction::triggered, this, &MainWindow::handleSaveFile);
+    connect(printAction, &QAction::triggered, this, &MainWindow::printDocument);
 
     connect(aboutAction, &QAction::triggered, this, &MainWindow::showAboutDialog);
     connect(mitLicenseAction, &QAction::triggered, this, &MainWindow::showFullMitLicense);
@@ -133,7 +142,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
         this->openLink(QUrl("https://github.com/tyleruploads/mdez/releases/latest/"));
     });
 
-    fileMenu->addActions({openFileAction, saveAsFileAction, saveFileAction});
+    fileMenu->addActions({openFileAction, saveAsFileAction, saveFileAction, printAction});
     helpMenu->addActions({aboutAction, mitLicenseAction, aboutQtAction, mdCheatSheetAction, keyboardCombosAction, reportIssueAction, checkUpdatesAction});
 
     menuBar->addMenu(fileMenu);
@@ -232,18 +241,23 @@ void MainWindow::openKeyboardCombos()
     </tr>
     <tr>
         <td>Open File</td>
-        <td>Ctrl / Cmd + O</td>
+        <td>`Ctrl / Cmd + O`</td>
         <td>Open an existing document</td>
     </tr>
     <tr>
         <td>Save As</td>
-        <td>Ctrl / Cmd + Shift + S</td>
+        <td>`Ctrl / Cmd + Shift + S`</td>
         <td>Save the current document under a new name or location</td>
     </tr>
     <tr>
         <td>Save</td>
-        <td>Ctrl / Cmd + S</td>
+        <td>`Ctrl / Cmd + S`</td>
         <td>Save changes to the current document</td>
+    </tr>
+    <tr>
+        <td>Print</td>
+        <td>`Ctrl + P`</td>
+        <td>Print the current document</td>
     </tr>
 </table>
 )");
@@ -348,4 +362,14 @@ void MainWindow::handleSaveFile()
     QTextStream out(&file);
     out << editor->toPlainText();
 
+}
+
+void MainWindow::printDocument()
+{
+    QPrinter printer(QPrinter::HighResolution);
+
+    QPrintDialog printDialog(&printer, this);
+    if (printDialog.exec() == QDialog::Accepted) {
+        mdView->print(&printer);
+    }
 }

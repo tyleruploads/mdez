@@ -22,6 +22,7 @@ Write raw Markdown on the left to **preview** rendered text on the right.
 | Open File | `Ctrl / Cmd + O` | Open an existing document |
 | Save As | `Ctrl / Cmd + Shift + S` | Save the current document under a new name or location |
 | Save | `Ctrl / Cmd + S` | Save changes to the current document |
+| Print | `Ctrl + P` | Print the current document |
 
 ## Downloads & Installation
 
