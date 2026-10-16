@@ -36,6 +36,7 @@ private slots:
     void updatePosLabel();
     void alertUser(QWidget* parent, QMessageBox::Icon boxType, const QString &title, const QString &text);
     bool isTextFile(const QString &filePath);
+    void handleRenderVisibility(const QString &filePath);
     void handleOpenFile();
     void handleSaveAsFile();
     void handleSaveFile();
@@ -49,6 +50,7 @@ private:
     QMenuBar *menuBar;
     QMenu *fileMenu;
     QMenu *helpMenu;
+    QLabel *renderingLabel;
     QTextEdit *editor;
     QTextBrowser *mdView;
     QHBoxLayout *mdHorizontal;
@@ -78,6 +80,8 @@ private:
 
 
     bool unsavedFileChanges;
+    bool isHtml;
+    bool renderable;
     QString currentFilePath;
 };
 

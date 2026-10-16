@@ -24,6 +24,8 @@
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
+    renderable = true;
+    isHtml = false;
     unsavedFileChanges = false;
 
     mainLayout = new QVBoxLayout(this);
@@ -99,9 +101,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     reportIssueAction->setStatusTip(tr("Open the page to make a GitHub Issue in the MDEZ++ Repository"));
     checkUpdatesAction->setStatusTip(tr("Open the the GitHub Releases page for MDEZ++ to check for updates"));
 
+    renderingLabel = new QLabel("", this);
+
     mdHorizontal = new QHBoxLayout();
 
     editor = new QTextEdit(this);
+    editor->setAcceptRichText(false);
     editor->setPlaceholderText("Type here");
 
     mdView = new QTextBrowser(this);
@@ -167,6 +172,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
  
     mainLayout->addWidget(header);
     mainLayout->addWidget(menuBar);
+    mainLayout->addWidget(renderingLabel);
     mainLayout->addLayout(mdHorizontal);
     mainLayout->addWidget(statusBar);
 
@@ -174,24 +180,30 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
 void MainWindow::updateMarkdown()
 {
-    QString mdText = editor->toPlainText();
+    QString editorText = editor->toPlainText();
 
-    QTextDocument tempDoc;
-    tempDoc.setMarkdown(mdText);
-    QString rawHtml = tempDoc.toHtml();
+    if (!isHtml) {
+        QTextDocument tempDoc;
+        tempDoc.setMarkdown(editorText);
+        QString rawHtml = tempDoc.toHtml();
 
-    QRegularExpression qtBlockquoteRegex("<p style=\" margin-top:[^;]+; margin-bottom:[^;]+; margin-left:40px; margin-right:40px; [^\"]*\">(.*?)</p>");
+        QRegularExpression qtBlockquoteRegex("<p style=\" margin-top:[^;]+; margin-bottom:[^;]+; margin-left:40px; margin-right:40px; [^\"]*\">(.*?)</p>");
 
-    QString tableReplacement =
+        QString tableReplacement =
         "<table width=\"100%\" cellpadding=\"8\" style=\"margin: 6px 0px;\">"
         "<tr><td bgcolor=\"#f0f0f0\" style=\"border-left: 4px solid #007acc;\">"
         "<span style=\"color: #555555;\">\\1</span>"
         "</td></tr>"
         "</table>";
 
-    rawHtml.replace(qtBlockquoteRegex, tableReplacement);
+        rawHtml.replace(qtBlockquoteRegex, tableReplacement);
 
-    mdView->setHtml(rawHtml);
+        mdView->setHtml(rawHtml);
+    } else {
+        this->renderingLabel->setText("Viewing as HTML");
+        mdView->setHtml(editorText);
+    }
+
     unsavedFileChanges = true;
     MainWindow::updateWindowTitle();
 
@@ -340,12 +352,44 @@ bool MainWindow::isTextFile(const QString &filePath)
     return false;
 }
 
+void MainWindow::handleRenderVisibility(const QString &filePath)
+{
+    QMimeDatabase db;
+    QMimeType mime = db.mimeTypeForFile(filePath);
+
+    if (mime.name() == "text/markdown") {
+        renderable = true;
+        isHtml = false;
+        this->mdView->setVisible(true);
+        this->renderingLabel->setText("");
+    }
+    else if (mime.name() == "text/html") {
+        renderable = true;
+        isHtml = true;
+        this->mdView->setVisible(true);
+        this->renderingLabel->setText("Viewing as HTML");
+    }
+    // Code files
+    else if (mime.inherits("text/plain")) {
+        renderable = false;
+        isHtml = false;
+        this->mdView->setVisible(false);
+        this->renderingLabel->setText("Viewing as plain text (Markdown rendering disabled for this file type)");
+    }
+    else {
+        renderable = false;
+        isHtml = false;
+        this->mdView->setVisible(false);
+        this->renderingLabel->setText("Viewing as plain text (Markdown rendering disabled for this file type)");
+    }
+}
+
 void MainWindow::handleOpenFile()
 {
     QString fileOpenPath = QFileDialog::getOpenFileName(this,
-        tr("Open Markdown File"), // Window title
+        tr("Open File"), // Window title
         !currentFilePath.isEmpty() ? currentFilePath : "document",
-        tr("Markdown Files (*.md);;All Files (*)"));
+        tr("All Files (*)"));
 
     if (fileOpenPath.isEmpty())
         return;
@@ -363,11 +407,13 @@ void MainWindow::handleOpenFile()
     QTextStream in(&file);
     QString fileContents = in.readAll(); 
 
-    editor->setText(fileContents);
+    editor->setPlainText(fileContents);
     MainWindow::updateMarkdown();
 
     this->statusBar->clearMessage();
     this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileOpenPath), 3000);
+
+    MainWindow::handleRenderVisibility(fileOpenPath);
 
     unsavedFileChanges = false;
     currentFilePath = fileOpenPath;
@@ -377,9 +423,9 @@ void MainWindow::handleOpenFile()
 void MainWindow::handleSaveAsFile()
 {
     QString fileSavePath = QFileDialog::getSaveFileName(this,
-        tr("Save Markdown File"),
+        tr("Save File"),
         !currentFilePath.isEmpty() ? currentFilePath : "document",
-        tr("Markdown files (*.md);;All Files (*)")
+        tr("All Files (*)")
     );
 
     if (fileSavePath.isEmpty())
@@ -432,7 +478,11 @@ void MainWindow::printDocument()
 
     QPrintDialog printDialog(&printer, this);
     if (printDialog.exec() == QDialog::Accepted) {
-        mdView->print(&printer);
+        if (renderable) {
+            mdView->print(&printer);
+        } else {
+            editor->print(&printer);
+        }
     }
 }
 
@@ -441,7 +491,7 @@ void MainWindow::exportHtml()
     QTextDocument *doc = mdView->document();
 
     QString htmlSavePath = QFileDialog::getSaveFileName(this,
-        tr("Save as HTML File"),
+        tr("Save HTML File"),
         "document.html",
         tr("HTML files (*.html);;All Files (*)")
     );
