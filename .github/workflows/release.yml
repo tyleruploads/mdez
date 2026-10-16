@@ -16,7 +16,7 @@ jobs:
         include:
           - os: ubuntu-latest
             target_name: mdez-linux
-            binary_path: build/mdez-linux
+            binary_path: build/mdez
             artifact_path: build/MDEZ++-x86_64.AppImage
           - os: windows-latest
             target_name: mdez-windows
@@ -38,7 +38,7 @@ jobs:
 
       - name: Compile MDEZ++
         run: |
-          cmake -B build -DOUTPUT_NAME=${{ matrix.target_name }}
+          cmake -B build -DOUTPUT_NAME=mdez
           cmake --build build --config Release
 
       - name: Package Linux Binary into Standalone AppImage
@@ -49,12 +49,14 @@ jobs:
 
           chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-qt-x86_64.AppImage
 
-          echo "[Desktop Entry]" > mdez-linux.desktop
-          echo "Type=Application" >> mdez-linux.desktop
-          echo "Name=MDEZ++" >> mdez-linux.desktop
-          echo "Exec=mdez-linux" >> mdez-linux.desktop
-          echo "Icon=mdez-icon" >> mdez-linux.desktop
-          echo "Categories=Utility;" >> mdez-linux.desktop
+          echo "[Desktop Entry]" > mdez.desktop
+          echo "Type=Application" >> mdez.desktop
+          echo "Name=MDEZ++" >> mdez.desktop
+          echo "Comment=A lightweight C++20 and Qt GUI Markdown editor" >> mdez.desktop
+          echo "Exec=mdez" >> mdez.desktop
+          echo "Icon=mdez-icon" >> mdez.desktop
+          echo "Terminal=false" >> mdez.desktop
+          echo "Categories=Utility;" >> mdez.desktop
 
 
           export QMAKE=$QT_ROOT_DIR/bin/qmake
@@ -63,9 +65,9 @@ jobs:
           VERSION=${{ github.sha }} ./linuxdeploy-x86_64.AppImage \
           --appimage-extract-and-run \
           --appdir=AppDir \
-          --executable=build/mdez-linux \
-          --desktop-file=mdez-linux.desktop \
-          --icon-file=${{ github.workspace }}/media/docs/mdez-icon.svg \
+          --executable=build/mdez \
+          --desktop-file=mdez.desktop \
+          --icon-file=${{ github.workspace }}/media/docs/mdez-icon.png \
           --plugin=qt \
           --output=appimage
 
