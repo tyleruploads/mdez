@@ -19,7 +19,8 @@
 #include <QStatusBar>
 #include <QPrinter>
 #include <QPrintDialog>
-#include <QDebug>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
@@ -292,7 +293,10 @@ void MainWindow::openLink(const QUrl &link)
 
     if (!success) {
         QString text = tr("Failed to open link: %1").arg(link.toString());
-        QMessageBox::critical(this, "Error", text);
+        MainWindow::alertUser(this, QMessageBox::Critical, "Error", text);
+    } else {
+        this->statusBar->clearMessage();
+        this->statusBar->showMessage(QString("Opening: %1").arg(link.toString()), 1500);
     }
 }
 
@@ -316,6 +320,25 @@ void MainWindow::updatePosLabel() {
     posLabel->setText(QString("%1, %2").arg(line, col));
 }
 
+void MainWindow::alertUser(QWidget *parent, QMessageBox::Icon boxType, const QString &title, const QString &text)
+{
+    QMessageBox msgBox(boxType, title, text, QMessageBox::Ok, parent);
+    msgBox.exec();
+}
+
+bool MainWindow::isTextFile(const QString &filePath)
+{
+    QMimeDatabase db;
+
+    QMimeType mime = db.mimeTypeForFile(filePath);
+
+    if (mime.inherits("text/plain")) {
+        return true;
+    }
+
+    alertUser(this, QMessageBox::Critical, "Error", "Provided file is not of plaintext MIME type.");
+    return false;
+}
 
 void MainWindow::handleOpenFile()
 {
@@ -327,9 +350,13 @@ void MainWindow::handleOpenFile()
     if (fileOpenPath.isEmpty())
         return;
 
-    QFile file(fileOpenPath);
+    if (!MainWindow::isTextFile(fileOpenPath)) {
+        return;
+    }
+
+    QFile file(fileOpenPath); 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "File read only or not text file";
+        alertUser(this, QMessageBox::Critical, "Error", "Failed to open file. File is read only or not of text type.");
         return;
     }
 
@@ -338,6 +365,9 @@ void MainWindow::handleOpenFile()
 
     editor->setText(fileContents);
     MainWindow::updateMarkdown();
+
+    this->statusBar->clearMessage();
+    this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileOpenPath), 3000);
 
     unsavedFileChanges = false;
     currentFilePath = fileOpenPath;
@@ -356,8 +386,13 @@ void MainWindow::handleSaveAsFile()
         return;
 
     QFile file(fileSavePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        alertUser(this, QMessageBox::Critical, "Error", "Failed to save the file. Please check if you have permissions for this location or if the disk is full.");
         return;
+    }
+
+    this->statusBar->clearMessage();
+    this->statusBar->showMessage(QString("Successfully Saved as %1").arg(fileSavePath), 3000);
 
     unsavedFileChanges = false;
     currentFilePath = fileSavePath;
@@ -375,8 +410,13 @@ void MainWindow::handleSaveFile()
     }
 
     QFile file(currentFilePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        alertUser(this, QMessageBox::Critical, "Error", "Failed to save the file. Please check if you have permissions for this location or if the disk is full.");
         return;
+    }
+
+    this->statusBar->clearMessage();
+    this->statusBar->showMessage(QString("Saved %1").arg(currentFilePath), 1000);
 
     unsavedFileChanges = false;
     MainWindow::updateWindowTitle();
@@ -410,12 +450,13 @@ void MainWindow::exportHtml()
         return;
 
     QFile file(htmlSavePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        alertUser(this, QMessageBox::Critical, "Error", "Failed to open HTML file for writing. Please check write permissions for the destination file.");
         return;
+    }
 
     QTextDocumentWriter writer(htmlSavePath);
     if (!writer.write(doc)) {
-        QString text = tr("Failed to save document as HTML to: %1").arg(htmlSavePath);
-        QMessageBox::critical(this, "Error", text);
+        alertUser(this, QMessageBox::Critical, "Error", "Failed to write the document to HTML. Please check write permissions for the destination file.");
     }
 }

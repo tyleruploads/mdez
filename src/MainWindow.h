@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
+#include <QMessageBox>
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -33,6 +34,8 @@ private slots:
     void openKeyboardCombos();
     int countWords();
     void updatePosLabel();
+    void alertUser(QWidget* parent, QMessageBox::Icon boxType, const QString &title, const QString &text);
+    bool isTextFile(const QString &filePath);
     void handleOpenFile();
     void handleSaveAsFile();
     void handleSaveFile();
