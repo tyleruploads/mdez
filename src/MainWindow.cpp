@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QLabel>
+#include <QSplitter>
 #include <QTextEdit>
 #include <QTextBrowser>
 #include <QTextDocument>
@@ -28,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     isHtml = false;
     unsavedFileChanges = false;
 
-    mainLayout = new QVBoxLayout(this);
+    mainLayout = new QVBoxLayout(this); 
 
     header = new QLabel("MDEZ++", this);
     
@@ -103,7 +104,24 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     renderingLabel = new QLabel("", this);
 
-    mdHorizontal = new QHBoxLayout();
+    mdHorizontal = new QSplitter();
+    mdHorizontal->setStyleSheet(R"(
+QSplitter {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+
+QSplitter::handle {
+    margin: 0px;
+    padding: 0px;
+}
+
+QSplitter > QWidget {
+    border: none;
+}
+)");
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
     editor = new QTextEdit(this);
     editor->setAcceptRichText(false);
@@ -111,6 +129,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     mdView = new QTextBrowser(this);
     mdView->setOpenExternalLinks(true); // Makes links open in browser
+    
+    editor->setContentsMargins(0, 0, 0, 0);
+    mdView->setContentsMargins(0, 0, 0, 0);
 
     statusBar = new QStatusBar(this);
     versionLabel = new QLabel(QString("v" APP_VERSION), this);
@@ -173,7 +194,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(header);
     mainLayout->addWidget(menuBar);
     mainLayout->addWidget(renderingLabel);
-    mainLayout->addLayout(mdHorizontal);
+    mainLayout->addWidget(mdHorizontal, 1);
     mainLayout->addWidget(statusBar);
 
 }

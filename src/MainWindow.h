@@ -6,6 +6,7 @@
 
 class QVBoxLayout;
 class QHBoxLayout;
+class QSplitter;
 class QLabel;
 class QTextEdit;
 class QTextBrowser;
@@ -53,7 +54,7 @@ private:
     QLabel *renderingLabel;
     QTextEdit *editor;
     QTextBrowser *mdView;
-    QHBoxLayout *mdHorizontal;
+    QSplitter *mdHorizontal;
 
     QAction *openFileAction;
     QAction *saveAsFileAction;
