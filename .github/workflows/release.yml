@@ -53,7 +53,7 @@ jobs:
           echo "Type=Application" >> mdez-linux.desktop
           echo "Name=MDEZ++" >> mdez-linux.desktop
           echo "Exec=mdez-linux" >> mdez-linux.desktop
-          echo "Icon=mdez-linux" >> mdez-linux.desktop
+          echo "Icon=mdez-icon" >> mdez-linux.desktop
           echo "Categories=Utility;" >> mdez-linux.desktop
 
 
@@ -65,7 +65,7 @@ jobs:
           --appdir=AppDir \
           --executable=build/mdez-linux \
           --desktop-file=mdez-linux.desktop \
-          --icon-file=${{ github.workspace }}/media/docs/mdez-linux.png \
+          --icon-file=${{ github.workspace }}/media/docs/mdez-icon.svg \
           --plugin=qt \
           --output=appimage
 
