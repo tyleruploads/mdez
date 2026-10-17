@@ -45,7 +45,7 @@ jobs:
         if: matrix.target_name == 'mdez-wasm'
         uses: jurplel/install-qt-action@v4
         with:
-          version: '6.8.0'
+          version: '6.8.3'
           host: all_os
           target: 'wasm'
           arch: ${{ matrix.qt_arch }}
@@ -63,8 +63,9 @@ jobs:
         if: matrix.target_name == 'mdez-wasm'
         run: |
           export EMSDK=$EMSDK_PATH
-          QT_WASM_DIR=$(echo $HOME/Qt/6.8.0/wasm_singlethread)
-          QT_HOST_DIR=$(echo $HOME/Qt/6.8.0/gcc_64)
+
+          QT_WASM_DIR=$QT_ROOT_DIR
+          QT_HOST_DIR=$(dirname $QT_HOST_DIR)/wasm_singlethread
 
           $QT_WASM_DIR/bin/qt-cmake -B build-wasm -G Ninja -DCMAKE_BUILD_TYPE=Release \
             -DQT_HOST_PATH=$QT_HOST_DIR \
