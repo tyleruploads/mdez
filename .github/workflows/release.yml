@@ -46,6 +46,8 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.8.0'
+          host: all_os
+          target: 'wasm'
           arch: ${{ matrix.qt_arch }}
           install-deps: 'true'
           set-env: 'false'
