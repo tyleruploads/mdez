@@ -82,7 +82,7 @@ jobs:
           cmake --build build-wasm --config Release
 
           cd build-wasm
-          zip -r ../mdez-wasm.zip *
+          zip -r mdez-wasm.zip *
           cd ..
 
       - name: Compile MDEZ++
