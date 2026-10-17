@@ -1,4 +1,7 @@
 #include "MainWindow.h"
+#ifdef Q_OS_WASM
+#include <emscripten.h>
+#endif
 #include <QObject>
 #include <QMenuBar>
 #include <QMenu>
@@ -18,8 +21,10 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QStatusBar>
+#ifndef Q_OS_WASM
 #include <QPrinter>
 #include <QPrintDialog>
+#endif
 #include <QMimeDatabase>
 #include <QMimeType>
 
@@ -407,6 +412,26 @@ void MainWindow::handleRenderVisibility(const QString &filePath)
 
 void MainWindow::handleOpenFile()
 {
+#ifdef Q_OS_WASM
+    QFileDialog::getOpenFileContent("All files (*)", [this](const QString &fileName, const QByteArray &fileContent) {
+        if (fileName.isEmpty())
+            return;
+
+        QString fileContents = QString::fromUtf8(fileContent);
+
+        editor->setPlainText(fileContents);
+        MainWindow::updateMarkdown();
+
+        this->statusBar->clearMessage();
+        this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileName), 3000);
+
+        MainWindow::handleRenderVisibility(fileName);
+
+        unsavedFileChanges = false;
+        currentFilePath = fileName;
+        MainWindow::updateWindowTitle();
+    });
+#else
     QString fileOpenPath = QFileDialog::getOpenFileName(this,
         tr("Open File"), // Window title
         !currentFilePath.isEmpty() ? currentFilePath : "document",
@@ -439,10 +464,24 @@ void MainWindow::handleOpenFile()
     unsavedFileChanges = false;
     currentFilePath = fileOpenPath;
     MainWindow::updateWindowTitle();
+#endif
 }
 
 void MainWindow::handleSaveAsFile()
 {
+#ifdef Q_OS_WASM
+    QByteArray fileData = editor->toPlainText().toUtf8();
+    QString hint = currentFilePath.isEmpty() ? "document.md" : currentFilePath;
+
+    QFileDialog::saveFileContent(fileData, hint);
+
+    this->statusBar->clearMessage();
+    this->statusBar->showMessage(QString("Successfully Saved as %1").arg(hint), 3000);
+
+    unsavedFileChanges = false;
+    currentFilePath = hint;
+    MainWindow::updateWindowTitle();
+#else
     QString fileSavePath = QFileDialog::getSaveFileName(this,
         tr("Save File"),
         !currentFilePath.isEmpty() ? currentFilePath : "document",
@@ -467,6 +506,7 @@ void MainWindow::handleSaveAsFile()
 
     QTextStream out(&file);
     out << editor->toPlainText();
+#endif
 }
 
 void MainWindow::handleSaveFile()
@@ -495,6 +535,9 @@ void MainWindow::handleSaveFile()
 
 void MainWindow::printDocument()
 {
+#ifdef Q_OS_WASM
+    emscripten_run_script("window.print();");
+#else
     QPrinter printer(QPrinter::HighResolution);
 
     QPrintDialog printDialog(&printer, this);
@@ -505,6 +548,7 @@ void MainWindow::printDocument()
             editor->print(&printer);
         }
     }
+#endif
 }
 
 void MainWindow::exportHtml()
