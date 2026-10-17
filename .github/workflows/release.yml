@@ -65,7 +65,7 @@ jobs:
           export EMSDK=$EMSDK_PATH
 
           QT_HOST_DIR=$QT_ROOT_DIR
-          QT_HOST_DIR=$(dirname $QT_HOST_DIR)/wasm_singlethread
+          QT_WASM_DIR=$(dirname $QT_HOST_DIR)/wasm_singlethread
 
           chmod +x $QT_WASM_DIR/bin/qt-cmake
 
