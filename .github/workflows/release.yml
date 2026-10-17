@@ -22,6 +22,11 @@ jobs:
             target_name: mdez-windows
             binary_path: build/Release/mdez-windows.exe
             artifact_path: build/Release/mdez-windows.zip
+          - os: ubuntu-22.04
+            target_name: mdez-wasm
+            qt_arch: wasm_singlethread
+            emsdk_version: 3.1.56
+            artifact_path: build-wasm/mdez-wasm.zip
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -36,7 +41,52 @@ jobs:
           cache: 'true'
           cache-key-prefix: 'qt-binaries'
 
+      - name: Install Qt WebAssembly Module
+        if: matrix.target_name == 'mdez-wasm'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          host: all_os
+          target: 'wasm'
+          arch: ${{ matrix.qt_arch }}
+          install-deps: 'true'
+          set-env: 'false'
+
+      - name: Setup Emscripten SDK
+        if: matrix.target_name == 'mdez-wasm'
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: ${{ matrix.emsdk_version }}
+          emscripten-cache-folder: 'emsdk-cache'
+
+      - name: Install Ninja
+        if: matrix.target_name == 'mdez-wasm'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build
+
+      - name: Compile MDEZ++ (WASM)
+        if: matrix.target_name == 'mdez-wasm'
+        run: |
+          export EMSDK=$EMSDK
+
+          QT_HOST_DIR=$QT_ROOT_DIR
+          QT_WASM_DIR=$(dirname $QT_HOST_DIR)/wasm_singlethread
+
+          chmod +x $QT_WASM_DIR/bin/qt-cmake
+
+          $QT_WASM_DIR/bin/qt-cmake -B build-wasm -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DQT_HOST_PATH=$QT_HOST_DIR \
+            -DQT_CHAINLOAD_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+
+          cmake --build build-wasm --config Release
+
+          cd build-wasm
+          zip -r mdez-wasm.zip *
+          cd ..
+
       - name: Compile MDEZ++
+        if: matrix.target_name != 'mdez-wasm'
         run: |
           cmake -B build -DOUTPUT_NAME=mdez
           cmake --build build --config Release
@@ -96,7 +146,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           merge-multiple: true
-          pattern: binary-mdez-*
+          pattern: binary-*
 
       - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v2
@@ -104,4 +154,5 @@ jobs:
           files: |
             MDEZ++-x86_64.AppImage
             mdez-windows.zip
+            mdez-wasm.zip
           generate_release_notes: true
