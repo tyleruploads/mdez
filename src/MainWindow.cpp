@@ -366,6 +366,14 @@ void MainWindow::alertUser(QWidget *parent, QMessageBox::Icon boxType, const QSt
 
 bool MainWindow::isTextFile(const QString &filePath)
 {
+    if (filePath.endsWith(".md", Qt::CaseInsensitive) ||
+        filePath.endsWith(".markdown", Qt::CaseInsensitive) ||
+        filePath.endsWith(".txt", Qt::CaseInsensitive) ||
+        filePath.endsWith(".html", Qt::CaseInsensitive) ||
+        filePath.endsWith(".htm", Qt::CaseInsensitive)) {
+        return true;
+    }
+
     QMimeDatabase db;
 
     QMimeType mime = db.mimeTypeForFile(filePath);
@@ -382,14 +390,23 @@ void MainWindow::handleRenderVisibility(const QString &filePath)
 {
     QMimeDatabase db;
     QMimeType mime = db.mimeTypeForFile(filePath);
+    QString mimeName = mime.name();
 
-    if (mime.name() == "text/markdown") {
+    if (filePath.endsWith(".md", Qt::CaseInsensitive) ||
+        filePath.endsWith(".markdown", Qt::CaseInsensitive)) {
+        mimeName = "text/markdown";
+    } else if (filePath.endsWith(".html", Qt::CaseInsensitive) ||
+               filePath.endsWith(".htm", Qt::CaseInsensitive)) {
+        mimeName = "text/html";
+    }
+
+    if (mimeName == "text/markdown") {
         renderable = true;
         isHtml = false;
         this->mdView->setVisible(true);
         this->renderingLabel->setText("");
     }
-    else if (mime.name() == "text/html") {
+    else if (mimeName == "text/html") {
         renderable = true;
         isHtml = true;
         this->mdView->setVisible(true);
