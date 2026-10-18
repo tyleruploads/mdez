@@ -29,6 +29,7 @@ public:
 private slots:
     void handleEditorInput();
     void updateWindowTitle();
+    void showFunFact();
     void showAboutDialog();
     void showFullMitLicense();
     void openLink(const QUrl &link);
@@ -65,6 +66,7 @@ private:
     QAction *aboutAction;
     QAction *mitLicenseAction;
     QAction *aboutQtAction;
+    QAction *funFactAction;
     QAction *mdCheatSheetAction;
     QAction *keyboardCombosAction;
     QAction *reportIssueAction;
@@ -84,6 +86,7 @@ private:
     bool isHtml;
     bool renderable;
     QString currentFilePath;
+    int lastFunFactIdx;
 };
 
 #endif

@@ -27,6 +27,10 @@
 #endif
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QFile>
+#include <QRandomGenerator>
+#include <QPushButton>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
@@ -91,6 +95,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     aboutAction = new QAction(this);
     mitLicenseAction = new QAction(this);
     aboutQtAction = new QAction(this);
+    funFactAction = new QAction(this);
     mdCheatSheetAction = new QAction(this);
     keyboardCombosAction = new QAction(this);
     reportIssueAction = new QAction(this);
@@ -98,6 +103,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     aboutAction->setText(tr("About MDEZ++"));
     mitLicenseAction->setText(tr("MDEZ++ License"));
+    funFactAction->setText(tr("Fun Facts!"));
     mdCheatSheetAction->setText(tr("Markdown Cheat Sheet"));
     keyboardCombosAction->setText(tr("Keyboard Combinations"));
     reportIssueAction->setText(tr("Report Issue"));
@@ -107,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     aboutAction->setStatusTip(tr("Show version, copyright, and licnesing information for MDEZ++"));
     mitLicenseAction->setStatusTip(tr("Display the full text of the MIT License for MDEZ++"));
     aboutQtAction->setStatusTip(tr("Show information about the Qt framework and its license"));
+    funFactAction->setStatusTip(tr("Display fun facts about MDEZ++"));
     mdCheatSheetAction->setStatusTip(tr("Open a quick reference cheat sheet for Markdown syntax"));
     keyboardCombosAction->setStatusTip(tr("View keyboard shortcuts for MDEZ++"));
     reportIssueAction->setStatusTip(tr("Open the page to make a GitHub Issue in the MDEZ++ Repository"));
@@ -169,6 +176,7 @@ QSplitter > QWidget {
 
     connect(aboutAction, &QAction::triggered, this, &MainWindow::showAboutDialog);
     connect(mitLicenseAction, &QAction::triggered, this, &MainWindow::showFullMitLicense);
+    connect(funFactAction, &QAction::triggered, this, &MainWindow::showFunFact);
     connect(aboutQtAction, &QAction::triggered, this, [this]() {
         QMessageBox::aboutQt(this, tr("About Qt"));
     });
@@ -188,7 +196,7 @@ QSplitter > QWidget {
     fileMenu->addAction(saveAsFileAction);
 #endif
     fileMenu->addActions({saveFileAction, printAction, exportHtmlAction});
-    helpMenu->addActions({aboutAction, mitLicenseAction, aboutQtAction, mdCheatSheetAction, keyboardCombosAction, reportIssueAction, checkUpdatesAction});
+    helpMenu->addActions({aboutAction, mitLicenseAction, aboutQtAction, funFactAction, mdCheatSheetAction, keyboardCombosAction, reportIssueAction, checkUpdatesAction});
 
     menuBar->addMenu(fileMenu);
     menuBar->addMenu(helpMenu);
@@ -209,6 +217,8 @@ QSplitter > QWidget {
     mainLayout->addWidget(renderingLabel);
     mainLayout->addWidget(mdHorizontal, 1);
     mainLayout->addWidget(statusBar);
+
+    QTimer::singleShot(1, this, &MainWindow::showFunFact); 
 
 }
 
@@ -255,6 +265,45 @@ void MainWindow::updateWindowTitle()
 
     setWindowTitle(QString("%1 | MDEZ++").arg(displayPath));
     pathLabel->setText(displayPath);
+}
+
+void MainWindow::showFunFact()
+{
+    QFile file = QFile(":/funfacts.txt");
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QStringList facts = QString(file.readAll()).split('\n', Qt::SkipEmptyParts);
+        file.close();
+
+        if (facts.isEmpty())
+            return;
+
+        int randomIdx = QRandomGenerator::global()->bounded(facts.size());
+
+        if (lastFunFactIdx && randomIdx == lastFunFactIdx) {
+            while (randomIdx == lastFunFactIdx) {
+               randomIdx = QRandomGenerator::global()->bounded(facts.size()); 
+            }
+        }
+
+        lastFunFactIdx = randomIdx;
+
+        QString funFact = facts.at(randomIdx).trimmed();
+
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle("Fun Fact!");
+        msgBox.setText(funFact);
+        msgBox.setStandardButtons(QMessageBox::Close);
+        QPushButton *continueBtn = msgBox.addButton("Show me another!", QMessageBox::ActionRole);
+
+        QObject::connect(continueBtn, &QPushButton::clicked, this, &MainWindow::showFunFact);
+
+        msgBox.setStyleSheet("QDialogButtonBox { qproperty-centerButtons: true; }");
+
+        msgBox.exec();
+    } else {
+        return;
+    }
 }
 
 void MainWindow::showAboutDialog()

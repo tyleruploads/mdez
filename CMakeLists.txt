@@ -4,6 +4,9 @@ project(mdez VERSION 0.10.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets Svg)
 
@@ -21,6 +24,7 @@ qt_add_executable(mdez
     src/main.cpp
     src/MainWindow.h
     src/MainWindow.cpp
+    src/resources.qrc
 )
 
 if(OUTPUT_NAME)
