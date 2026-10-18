@@ -1,0 +1,8 @@
+The name of this program is MDEZ++, but its GitHub repo name is mdez!
+MDEZ++ (mdez) is an open-source, lightweight, cross-platform C++20 and Qt GUI Markdown editor.
+Instead of a WYSIWYG editor, MDEZ++ renders a real-time live preview of your text in a split-screen pane using a fast, native, and minimal GUI.
+You can view a cool Markdown cheat sheet by clicking on Help and then Markdown Cheat Sheet!
+MDEZ++ is licnesed under the MIT license, but the Qt Framework is licensed under the GNU Lesser General Public License (LGPLv3)!
+You can contribute to this project!
+This project is compiled with CMake!
+This project uses Emscripten when compiling to WASM so it can be ran in your browser!

@@ -1,6 +1,6 @@
 # MDEZ++
 
-MDEZ++ (mdez) is an **open-source, lightweight, cross-platform C++20 and Qt GUI Markdown editor.** Instead of a WYSIWYG editor, MDEZ++ renders a real-time live preview of your text in a split-screen pane using a fast, native, and minimal GUI.
+MDEZ++ (mdez) is an **open-source, lightweight, cross-platform C++20 and Qt GUI Markdown editor.** Instead of a WYSIWYG editor, MDEZ++ renders a real-time live preview of your text in a split-screen pane using a fast, native, and minimal GUI. MDEZ++ can also edit **any text-based file format,** including HTML, plain text, and code files, making it highly versatile.
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/tyleruploads/mdez/blob/main/LICENSE)
 [![GitHub Issues](https://img.shields.io/github/issues/tyleruploads/mdez)](https://github.com/tyleruploads/mdez/issues)
@@ -12,7 +12,7 @@ MDEZ++ (mdez) is an **open-source, lightweight, cross-platform C++20 and Qt GUI 
 
 ## Usage
 
-Write raw Markdown on the left to **preview** rendered text on the right.
+Write raw Markdown or HTML on the left to **preview** rendered text on the right. You can also edit **any other text-based file type.** Examples of these file types include normal text files, code files (e.g., `.cpp`), JSON files, and more! If a preview is not available, the right side will automatically be hidden.
 
 > **New to Markdown?** Check out this [cheat sheet](https://dev.to/thetylern/a-markdown-cheat-sheet-for-anywhere-32bp)!
 
@@ -26,11 +26,13 @@ Write raw Markdown on the left to **preview** rendered text on the right.
 
 ## Downloads & Installation
 
-Currently, **no installation is required**! All you need to do is download and open the appropriate **portable, pre-compiled binary** for your operating system.
+Currently, **no installation is required**! All you need to do is download and open the appropriate **portable, pre-compiled binary** for your operating system or **open the website.**
 
-| Linux | Windows | macOS |
-| :---: | :---:   | :---: |
-| [MDEZ++ AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage) | [MDEZ++ Windows Executable](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported |
+> Certain features are not available in the Web download due to browser restrictions and other factors, such as choosing file save paths.
+
+| Linux | Windows | macOS | Web Download | Web Page |
+| :---: | :---:   | :---: | :---: | :---: |
+| [MDEZ++ AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage) | [MDEZ++ Windows Executable](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported | [MDEZ++ Web (WASM) Download](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-wasm.zip) | [MDEZ++ Web (WASM) on GitHub Pages](https://tyleruploads.github.io/mdez/)
 
 ## Note for Linux Users
 
@@ -51,7 +53,13 @@ If you do not know what to do with the zip file, follow these steps.
     + Click the Run Anyway button at the bottom
     + Note: This is normal behavior for open-source software not signed with a commercial Microsoft developer key
 
-<!-- Section: Features COMING SOON !-->
+## Features
+
+- **Smart View:** Automatically switches between live-previews of Markdown or HTML or a single-pane plaintext editor based on file MIME type.
+- **WebAssembly (WASM) Support:** Supports WebAssembly, allowing MDEZ++ to be run in the browser.
+- **Multi-Format Output Support:** No matter what you are editing, you can always print it!
+- **Metadata in Status Bar:** View important information such as the version, word count, position in text, and file path in the status bar!
+- **Fun Facts:** View interesting fun facts at the start of the program and by finding them in the Help menu.
 
 ## Contributing
 
