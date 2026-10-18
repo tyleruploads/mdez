@@ -434,6 +434,10 @@ void MainWindow::handleOpenFile()
         if (fileName.isEmpty())
             return;
 
+        if (!MainWindow::isTextFile(fileName)) {
+            return;
+        }
+
         QString fileContents = QString::fromUtf8(fileContent);
 
         editor->setPlainText(fileContents);
