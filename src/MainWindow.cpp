@@ -448,13 +448,12 @@ void MainWindow::handleOpenFile()
 
         QString fileContents = QString::fromUtf8(fileContent);
 
+        MainWindow::handleRenderVisibility(fileOpenPath);
         editor->setPlainText(fileContents);
         MainWindow::updateMarkdown();
 
         this->statusBar->clearMessage();
         this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileName), 3000);
-
-        MainWindow::handleRenderVisibility(fileName);
 
         unsavedFileChanges = false;
         currentFilePath = fileName;
@@ -482,13 +481,12 @@ void MainWindow::handleOpenFile()
     QTextStream in(&file);
     QString fileContents = in.readAll(); 
 
+    MainWindow::handleRenderVisibility(fileOpenPath);
     editor->setPlainText(fileContents);
     MainWindow::updateMarkdown();
 
     this->statusBar->clearMessage();
-    this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileOpenPath), 3000);
-
-    MainWindow::handleRenderVisibility(fileOpenPath);
+    this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileOpenPath), 3000); 
 
     unsavedFileChanges = false;
     currentFilePath = fileOpenPath;
