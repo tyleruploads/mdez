@@ -48,35 +48,40 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     fileMenu->setTitle("File");
 
     openFileAction = new QAction(this);
+
+#ifndef Q_OS_WASM
     saveAsFileAction = new QAction(this);
+    saveAsFileAction->setText(tr("Save As"));
+    saveAsFileAction->setStatusTip(tr("Save the current document under a new name or location"));
+    saveAsFileAction->setShortcut(QKeySequence(tr("Ctrl+Shift+S")));
+    saveAsFileAction->setShortcutContext(Qt::ApplicationShortcut);
+    this->addAction(saveAsFileAction);
+    connect(saveAsFileAction, &QAction::triggered, this, &MainWindow::handleSaveAsFile);
+#endif
+
     saveFileAction = new QAction(this);
     printAction = new QAction(this);
     exportHtmlAction = new QAction(this);
 
-    openFileAction->setText(tr("Open File"));
-    saveAsFileAction->setText(tr("Save As"));
+    openFileAction->setText(tr("Open File")); 
     saveFileAction->setText(tr("Save"));
     printAction->setText(tr("Print"));
     exportHtmlAction->setText(tr("Export as HTML"));
 
-    openFileAction->setStatusTip(tr("Open an existing document"));
-    saveAsFileAction->setStatusTip(tr("Save the current document under a new name or location"));
+    openFileAction->setStatusTip(tr("Open an existing document")); 
     saveFileAction->setStatusTip(tr("Save changes to the current document"));
     printAction->setStatusTip(tr("Print the current document"));
     exportHtmlAction->setStatusTip(tr("Export current document in the HTML format"));
 
-    openFileAction->setShortcut(QKeySequence::Open);
-    saveAsFileAction->setShortcut(QKeySequence(tr("Ctrl+Shift+S")));
+    openFileAction->setShortcut(QKeySequence::Open); 
     saveFileAction->setShortcut(QKeySequence(tr("Ctrl+S")));
     printAction->setShortcut(QKeySequence::Print);
    
-    openFileAction->setShortcutContext(Qt::ApplicationShortcut);
-    saveAsFileAction->setShortcutContext(Qt::ApplicationShortcut);
+    openFileAction->setShortcutContext(Qt::ApplicationShortcut); 
     saveFileAction->setShortcutContext(Qt::ApplicationShortcut);
     printAction->setShortcutContext(Qt::ApplicationShortcut);
 
-    this->addAction(openFileAction);
-    this->addAction(saveAsFileAction);
+    this->addAction(openFileAction); 
     this->addAction(saveFileAction);
     this->addAction(printAction);
 
@@ -157,8 +162,7 @@ QSplitter > QWidget {
 
     connect(editor, &QTextEdit::cursorPositionChanged, this, &MainWindow::updatePosLabel);
 
-    connect(openFileAction, &QAction::triggered, this, &MainWindow::handleOpenFile);
-    connect(saveAsFileAction, &QAction::triggered, this, &MainWindow::handleSaveAsFile);
+    connect(openFileAction, &QAction::triggered, this, &MainWindow::handleOpenFile); 
     connect(saveFileAction, &QAction::triggered, this, &MainWindow::handleSaveFile);
     connect(printAction, &QAction::triggered, this, &MainWindow::printDocument);
     connect(exportHtmlAction, &QAction::triggered, this, &MainWindow::exportHtml);
@@ -179,7 +183,11 @@ QSplitter > QWidget {
         this->openLink(QUrl("https://github.com/tyleruploads/mdez/releases/latest/"));
     });
 
-    fileMenu->addActions({openFileAction, saveAsFileAction, saveFileAction, printAction, exportHtmlAction});
+    fileMenu->addAction(openFileAction);
+#ifndef Q_OS_WASM
+    fileMenu->addAction(saveAsFileAction);
+#endif
+    fileMenu->addActions({saveFileAction, printAction, exportHtmlAction});
     helpMenu->addActions({aboutAction, mitLicenseAction, aboutQtAction, mdCheatSheetAction, keyboardCombosAction, reportIssueAction, checkUpdatesAction});
 
     menuBar->addMenu(fileMenu);
@@ -490,19 +498,8 @@ void MainWindow::handleOpenFile()
 
 void MainWindow::handleSaveAsFile()
 {
-#ifdef Q_OS_WASM
-    QByteArray fileData = editor->toPlainText().toUtf8();
-    QString hint = currentFilePath.isEmpty() ? "document.md" : currentFilePath;
+    // This function should not be called from WASM
 
-    QFileDialog::saveFileContent(fileData, hint);
-
-    this->statusBar->clearMessage();
-    this->statusBar->showMessage(QString("Successfully Saved as %1").arg(hint), 3000);
-
-    unsavedFileChanges = false;
-    currentFilePath = hint;
-    MainWindow::updateWindowTitle();
-#else
     QString fileSavePath = QFileDialog::getSaveFileName(this,
         tr("Save File"),
         !currentFilePath.isEmpty() ? currentFilePath : "document",
@@ -527,11 +524,23 @@ void MainWindow::handleSaveAsFile()
 
     QTextStream out(&file);
     out << editor->toPlainText();
-#endif
 }
 
 void MainWindow::handleSaveFile()
 {
+#ifdef Q_OS_WASM
+    QByteArray fileData = editor->toPlainText().toUtf8();
+    QString hint = currentFilePath.isEmpty() ? "document.md" : currentFilePath;
+
+    QFileDialog::saveFileContent(fileData, hint);
+
+    this->statusBar->clearMessage();
+    this->statusBar->showMessage(QString("Successfully Saved as %1").arg(hint), 3000);
+
+    unsavedFileChanges = false;
+    currentFilePath = hint;
+    MainWindow::updateWindowTitle();
+#else
     if (currentFilePath.isEmpty()) {
         MainWindow::handleSaveAsFile();
         return;
@@ -551,7 +560,7 @@ void MainWindow::handleSaveFile()
 
     QTextStream out(&file);
     out << editor->toPlainText();
-
+#endif
 }
 
 void MainWindow::printDocument()
