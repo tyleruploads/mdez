@@ -3,6 +3,12 @@
 
 #include <QWidget>
 #include <QMessageBox>
+#include <QTextBrowser>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QEventLoop>
+#include <QImage>
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -17,6 +23,60 @@ class QAction;
 class QString;
 class QUrl;
 class QStatusBar;
+
+class MdezDocBrowser : public QTextBrowser {
+    Q_OBJECT
+public:
+    MdezDocBrowser(QWidget *parent = nullptr) : QTextBrowser(parent) {
+        setOpenExternalLinks(true);
+        manager = new QNetworkAccessManager(this);
+    }
+
+    QVariant loadResource(int type, const QUrl &name) override {
+        if (type == QTextDocument::ImageResource && (name.scheme() == "http" || name.scheme() == "https")) {
+            QVariant cachedResource = QTextBrowser::loadResource(type, name);
+
+            if (cachedResource.isValid()) {
+                return cachedResource;
+            }
+
+            if (!activeDownloads.contains(name)) {
+                activeDownloads.insert(name, true);
+
+                QNetworkRequest request(name);
+                QNetworkReply *reply = manager->get(request);
+
+                connect(reply, &QNetworkReply::finished, this, [this, reply, name]() {
+                    activeDownloads.remove(name);
+
+                    if (reply->error() == QNetworkReply::NoError) {
+                        QByteArray data = reply->readAll();
+                        QImage img = QImage::fromData(data);
+                        if (!img.isNull()) {
+                            int targetWidth = 500;
+
+                            if (img.width() > targetWidth)
+                                img = img.scaledToWidth(targetWidth, Qt::SmoothTransformation);
+
+                            document()->addResource(QTextDocument::ImageResource, name, img);
+
+                            viewport()->update();
+                            document()->markContentsDirty(0, document()->characterCount());
+
+                        }
+                    }
+                    reply->deleteLater();
+                });
+            }
+            return QVariant();
+        }
+        return QTextBrowser::loadResource(type, name);
+    }
+
+private:
+    QNetworkAccessManager *manager;
+    QMap<QUrl, bool> activeDownloads;
+};
 
 class MainWindow : public QWidget
 {
@@ -54,7 +114,7 @@ private:
     QMenu *helpMenu;
     QLabel *renderingLabel;
     QTextEdit *editor;
-    QTextBrowser *mdView;
+    MdezDocBrowser *mdView;
     QSplitter *mdHorizontal;
 
     QAction *openFileAction;
@@ -86,7 +146,7 @@ private:
     bool isHtml;
     bool renderable;
     QString currentFilePath;
-    int lastFunFactIdx;
+    int lastFunFactIdx = -1;
 };
 
 #endif

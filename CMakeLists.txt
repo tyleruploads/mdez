@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Svg)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Svg Network)
 
 set(OPTIONAL_LIBS "")
 if(NOT EMSCRIPTEN)
@@ -31,7 +31,7 @@ if(OUTPUT_NAME)
     set_target_properties(mdez PROPERTIES OUTPUT_NAME "${OUTPUT_NAME}")
 endif()
 
-target_link_libraries(mdez PRIVATE Qt6::Widgets Qt6::Svg ${OPTIONAL_LIBS})
+target_link_libraries(mdez PRIVATE Qt6::Widgets Qt6::Svg Qt6::Network ${OPTIONAL_LIBS})
 
 target_compile_definitions(mdez PRIVATE
     APP_VERSION="${PROJECT_VERSION}"

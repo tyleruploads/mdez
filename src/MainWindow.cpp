@@ -144,8 +144,7 @@ QSplitter > QWidget {
     editor->setAcceptRichText(false);
     editor->setPlaceholderText("Type here");
 
-    mdView = new QTextBrowser(this);
-    mdView->setOpenExternalLinks(true); // Makes links open in browser
+    mdView = new MdezDocBrowser(this);
     
     editor->setContentsMargins(0, 0, 0, 0);
     mdView->setContentsMargins(0, 0, 0, 0);
@@ -245,6 +244,7 @@ void MainWindow::handleEditorInput()
         mdView->setHtml(rawHtml);
     } else {
         this->renderingLabel->setText("Viewing as HTML");
+
         mdView->setHtml(editorText);
     }
 
@@ -280,7 +280,7 @@ void MainWindow::showFunFact()
 
         int randomIdx = QRandomGenerator::global()->bounded(facts.size());
 
-        if (lastFunFactIdx && randomIdx == lastFunFactIdx) {
+        if (lastFunFactIdx != -1 && randomIdx == lastFunFactIdx) {
             while (randomIdx == lastFunFactIdx) {
                randomIdx = QRandomGenerator::global()->bounded(facts.size()); 
             }
@@ -296,7 +296,10 @@ void MainWindow::showFunFact()
         msgBox.setStandardButtons(QMessageBox::Close);
         QPushButton *continueBtn = msgBox.addButton("Show me another!", QMessageBox::ActionRole);
 
-        QObject::connect(continueBtn, &QPushButton::clicked, this, &MainWindow::showFunFact);
+        QObject::connect(continueBtn, &QPushButton::clicked, this, [&msgBox, this]() {
+            msgBox.accept();
+            this->showFunFact();
+        });
 
         msgBox.setStyleSheet("QDialogButtonBox { qproperty-centerButtons: true; }");
 
