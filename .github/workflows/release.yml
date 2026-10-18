@@ -86,11 +86,13 @@ jobs:
           cd ..
 
       - name: Upload Pages Artifact for WASM
+        if: matrix.target_name == 'mdez-wasm'
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'build-wasm'
 
       - name: Publish WASM to GitHub Pages
+        if: matrix.target_name == 'mdez-wasm'
         id: deployment
         uses: actions/deploy-pages@v4
 
