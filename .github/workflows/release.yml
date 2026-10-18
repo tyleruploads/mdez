@@ -85,6 +85,15 @@ jobs:
           zip -r mdez-wasm.zip *
           cd ..
 
+      - name: Upload Pages Artifact for WASM
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'build-wasm'
+
+      - name: Publish WASM to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
       - name: Compile MDEZ++
         if: matrix.target_name != 'mdez-wasm'
         run: |
