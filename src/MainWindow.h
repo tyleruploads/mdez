@@ -27,7 +27,7 @@ public:
     ~MainWindow() override = default;
 
 private slots:
-    void updateMarkdown();
+    void handleEditorInput();
     void updateWindowTitle();
     void showAboutDialog();
     void showFullMitLicense();

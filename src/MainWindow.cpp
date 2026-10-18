@@ -158,7 +158,7 @@ QSplitter > QWidget {
     statusSpacer3 = new QWidget(this);
     statusSpacer3->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-    connect(editor, &QTextEdit::textChanged, this, &MainWindow::updateMarkdown);
+    connect(editor, &QTextEdit::textChanged, this, &MainWindow::handleEditorInput);
 
     connect(editor, &QTextEdit::cursorPositionChanged, this, &MainWindow::updatePosLabel);
 
@@ -212,7 +212,7 @@ QSplitter > QWidget {
 
 }
 
-void MainWindow::updateMarkdown()
+void MainWindow::handleEditorInput()
 {
     QString editorText = editor->toPlainText();
 
@@ -448,9 +448,9 @@ void MainWindow::handleOpenFile()
 
         QString fileContents = QString::fromUtf8(fileContent);
 
-        MainWindow::handleRenderVisibility(fileOpenPath);
+        MainWindow::handleRenderVisibility(fileName);
         editor->setPlainText(fileContents);
-        MainWindow::updateMarkdown();
+        MainWindow::handleEditorInput();
 
         this->statusBar->clearMessage();
         this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileName), 3000);
@@ -483,7 +483,7 @@ void MainWindow::handleOpenFile()
 
     MainWindow::handleRenderVisibility(fileOpenPath);
     editor->setPlainText(fileContents);
-    MainWindow::updateMarkdown();
+    MainWindow::handleEditorInput();
 
     this->statusBar->clearMessage();
     this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileOpenPath), 3000); 
