@@ -247,7 +247,7 @@ void MainWindow::handleEditorInput()
     if (!isHtml) {
         QTextDocument tempDoc;
         tempDoc.setMarkdown(editorText);
-        QString rawHtml = tempDoc.toHtml();
+        QString rawHtml = tempDoc.toHtml(); 
 
         QRegularExpression qtBlockquoteRegex("<p style=\" margin-top:[^;]+; margin-bottom:[^;]+; margin-left:40px; margin-right:40px; [^\"]*\">(.*?)</p>");
 
@@ -259,6 +259,36 @@ void MainWindow::handleEditorInput()
         "</table>";
 
         rawHtml.replace(qtBlockquoteRegex, tableReplacement);
+
+        QRegularExpression qtCodeRegex(R"(((?:<pre[^>]*>(?:<span[^>]*>)?[\s\S]*?(?:</span>)?</pre>\s*)+))");
+        QRegularExpressionMatchIterator i = qtCodeRegex.globalMatch(rawHtml);
+
+        QList<QRegularExpressionMatch> matches;
+        while (i.hasNext()) matches.append(i.next());
+
+        for (int idx = matches.size() - 1; idx >= 0; --idx) {
+            const QRegularExpressionMatch &match = matches.at(idx);
+            QString fullBlock = match.captured(1);
+
+            QRegularExpression tagCleaner(R"(</?(?:pre|span|br)[^>]*>)");
+            QString cleanText = fullBlock;
+            cleanText.remove(tagCleaner);
+
+            cleanText.replace("\n", "<br />");
+
+
+            QString codeReplacement =
+            "<table border=\"0\" cellspacing=\"0\" cellpadding=\"10\" bgcolor=\"#f4f4f5\" style=\"border: 1px solid #e4e4e7; border-radius: 4px; margin: 10px 0;\">"
+            "<tr><td>"
+            "<pre style=\"margin: 0; font-family: 'Hack', monospace; color: #27272a; font-size: 13px; line-height: 1.5; width: 100%; white-space: pre-wrap;\">"
+            + cleanText +
+            "</pre>"
+            "</td></tr>"
+            "</table>";
+
+            rawHtml.replace(match.capturedStart(0), match.capturedLength(0), codeReplacement);
+
+        }
 
         mdView->setHtml(rawHtml);
     } else {
