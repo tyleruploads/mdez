@@ -9,6 +9,11 @@ int main(int argc, char **argv)
 {
     QApplication app (argc, argv);
 
+    QCoreApplication::setOrganizationName("tyleruploads");
+    QCoreApplication::setOrganizationDomain("https://github.com/tyleruploads");
+    QCoreApplication::setOrganizationDomain("MDEZ++");
+    QCoreApplication::setApplicationVersion(APP_VERSION);
+
     QApplication::setWindowIcon(QIcon("media/docs/mdez-icon.svg"));
 
     MainWindow window;

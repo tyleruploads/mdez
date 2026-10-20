@@ -31,9 +31,17 @@
 #include <QRandomGenerator>
 #include <QPushButton>
 #include <QTimer>
+#include <QSettings>
+#include <QCheckBox>
+#include <QFormLayout>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QSpinBox>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
+    settings = new QSettings();
+
     renderable = true;
     isHtml = false;
     unsavedFileChanges = false;
@@ -119,6 +127,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     reportIssueAction->setStatusTip(tr("Open the page to make a GitHub Issue in the MDEZ++ Repository"));
     checkUpdatesAction->setStatusTip(tr("Open the the GitHub Releases page for MDEZ++ to check for updates"));
 
+    settingsAction = new QAction(this);
+    settingsAction->setText(tr("Settings"));
+    settingsAction->setStatusTip(tr("Configure settings in MDEZ++"));
+
     renderingLabel = new QLabel("", this);
 
     mdHorizontal = new QSplitter();
@@ -190,6 +202,8 @@ QSplitter > QWidget {
         this->openLink(QUrl("https://github.com/tyleruploads/mdez/releases/latest/"));
     });
 
+    connect(settingsAction, &QAction::triggered, this, &MainWindow::showSettingsMenu);
+
     fileMenu->addAction(openFileAction);
 #ifndef Q_OS_WASM
     fileMenu->addAction(saveAsFileAction);
@@ -199,6 +213,7 @@ QSplitter > QWidget {
 
     menuBar->addMenu(fileMenu);
     menuBar->addMenu(helpMenu);
+    menuBar->addAction(settingsAction);
 
     mdHorizontal->addWidget(editor);
     mdHorizontal->addWidget(mdView);
@@ -217,8 +232,12 @@ QSplitter > QWidget {
     mainLayout->addWidget(mdHorizontal, 1);
     mainLayout->addWidget(statusBar);
 
-    QTimer::singleShot(1, this, &MainWindow::showFunFact); 
+    MainWindow::initSettingVars();
 
+    if (showFunFacts) QTimer::singleShot(1, this, &MainWindow::showFunFact);
+
+    autoSaveTimer = new QTimer(this);
+    MainWindow::autoSaveHandler();
 }
 
 void MainWindow::handleEditorInput()
@@ -265,6 +284,82 @@ void MainWindow::updateWindowTitle()
 
     setWindowTitle(QString("%1 | MDEZ++").arg(displayPath));
     pathLabel->setText(displayPath);
+}
+
+void MainWindow::initSettingVars()
+{
+    lineEndingChar = settings->value("editor/lineEndings", "\n").toString();
+    autoSaveInterval = settings->value("editor/autoSaveInterval", 60).toInt();
+    useLineWrapping = settings->value("editor/enableLineWrapping", true).toBool();
+    showFunFacts = settings->value("other/showFunFacts", true).toBool();
+
+    this->editor->setLineWrapMode((useLineWrapping == true) ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
+}
+
+void MainWindow::showSettingsMenu()
+{
+    QDialog *settingsDialog = new QDialog(this);
+    settingsDialog->setWindowTitle(tr("MDEZ++ Settings"));
+    settingsDialog->setAttribute(Qt::WA_DeleteOnClose);
+
+    QFormLayout *formLayout = new QFormLayout(settingsDialog);
+
+    QSpinBox *autoSaveSpin = new QSpinBox(settingsDialog);
+    autoSaveSpin->setRange(10, 100);
+    autoSaveSpin->setSingleStep(10);
+
+    QComboBox *lineEndingCombo = new QComboBox(settingsDialog);
+    QCheckBox *enableLineWrappingCheck = new QCheckBox(settingsDialog);
+
+    lineEndingCombo->addItem(tr("UNIX / MacOS (LF)"), "\n");
+    lineEndingCombo->addItem(tr("Windows (CRLF)"), "\r\n");
+
+    QCheckBox *funFactsCheck = new QCheckBox(settingsDialog);
+
+    formLayout->addRow("Seconds between autosave:", autoSaveSpin);
+    formLayout->addRow("End of Line Character:", lineEndingCombo);
+    formLayout->addRow("Enable Line Wrapping in Editor:", enableLineWrappingCheck);
+    formLayout->addRow("Show fun facts after application initialization:", funFactsCheck);
+
+    autoSaveSpin->setValue(settings->value("editor/autoSaveInterval", 30).toInt());
+    enableLineWrappingCheck->setChecked(settings->value("editor/enableLineWrapping", true).toBool());
+    funFactsCheck->setChecked(settings->value("other/showFunFacts", true).toBool());
+
+    QString savedEnding = settings->value("editor/lineEndings", "\n").toString();
+    int endingIndex = lineEndingCombo->findData(savedEnding);
+    if (endingIndex != -1) {
+        lineEndingCombo->setCurrentIndex(endingIndex);
+    }
+
+    connect(autoSaveSpin, &QSpinBox::valueChanged, [this](int value) {
+        settings->setValue("editor/autoSaveInterval", value);
+        settings->sync();
+        autoSaveInterval = value;
+        autoSaveHandler();
+    });
+
+    connect(lineEndingCombo, &QComboBox::currentIndexChanged, [this, lineEndingCombo](int index) {
+        QVariant data = lineEndingCombo->itemData(index);
+        settings->setValue("editor/lineEndings", data);
+        settings->sync();
+
+        lineEndingChar = (index == 0) ? "\n" : "\r\n";
+    });
+
+    connect(enableLineWrappingCheck, &QCheckBox::checkStateChanged, [this](Qt::CheckState state) {
+        settings->setValue("editor/enableLineWrapping", state == Qt::Checked);
+        settings->sync();
+        useLineWrapping = (state == Qt::Checked);
+        this->editor->setLineWrapMode((useLineWrapping == true) ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
+    });
+
+    connect(funFactsCheck, &QCheckBox::checkStateChanged, [this](Qt::CheckState state) {
+        settings->setValue("other/showFunFacts", state == Qt::Checked);
+        settings->sync();
+        showFunFacts = (state == Qt::Checked);
+    });
+
+    settingsDialog->show();
 }
 
 void MainWindow::showFunFact()
@@ -487,6 +582,38 @@ void MainWindow::handleRenderVisibility(const QString &filePath)
     }
 }
 
+QString MainWindow::replaceLineEndings(const QString &content)
+{
+    QString result = content;
+
+    if (lineEndingChar == "\r\n") {
+        result.replace(QRegularExpression("\r\n|\r"), "\n");
+    } else
+        result.replace("\r\n", "\n");
+
+    return result;
+}
+
+void MainWindow::autoSaveHandler()
+{
+    autoSaveTimer->stop();
+
+    // Disconnect previous functions if called many times
+    disconnect(autoSaveTimer, &QTimer::timeout, nullptr, nullptr);
+
+    connect(autoSaveTimer, &QTimer::timeout, this, [this]() {
+        if (autoSaveInterval == -1) return;
+        if (!currentFilePath.isEmpty()) MainWindow::handleSaveFile();
+        else {
+            this->statusBar->clearMessage();
+            this->statusBar->showMessage(QString("Save file to enable autosave!"), 3000);
+        }
+    });
+
+    if (autoSaveInterval > 0)
+        autoSaveTimer->start(autoSaveInterval * 1000);
+}
+
 void MainWindow::handleOpenFile()
 {
 #ifdef Q_OS_WASM
@@ -552,7 +679,7 @@ void MainWindow::handleSaveAsFile()
 
     QString fileSavePath = QFileDialog::getSaveFileName(this,
         tr("Save File"),
-        !currentFilePath.isEmpty() ? currentFilePath : "document",
+        !currentFilePath.isEmpty() ? currentFilePath : "document.md",
         tr("All Files (*)")
     );
 
@@ -573,7 +700,7 @@ void MainWindow::handleSaveAsFile()
     MainWindow::updateWindowTitle();
 
     QTextStream out(&file);
-    out << editor->toPlainText();
+    out << MainWindow::replaceLineEndings(editor->toPlainText());
 }
 
 void MainWindow::handleSaveFile()
@@ -582,7 +709,7 @@ void MainWindow::handleSaveFile()
     QByteArray fileData = editor->toPlainText().toUtf8();
     QString hint = currentFilePath.isEmpty() ? "document.md" : currentFilePath;
 
-    QFileDialog::saveFileContent(fileData, hint);
+    QFileDialog::saveFileContent(MainWindow::changeFileEndings(fileData), hint);
 
     this->statusBar->clearMessage();
     this->statusBar->showMessage(QString("Successfully Saved as %1").arg(hint), 3000);
@@ -609,7 +736,7 @@ void MainWindow::handleSaveFile()
     MainWindow::updateWindowTitle();
 
     QTextStream out(&file);
-    out << editor->toPlainText();
+    out << MainWindow::replaceLineEndings(editor->toPlainText());
 #endif
 }
 

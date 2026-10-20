@@ -23,6 +23,8 @@ class QAction;
 class QString;
 class QUrl;
 class QStatusBar;
+class QSettings;
+class QTimer;
 
 class MdezDocBrowser : public QTextBrowser {
     Q_OBJECT
@@ -89,6 +91,8 @@ public:
 private slots:
     void handleEditorInput();
     void updateWindowTitle();
+    void initSettingVars();
+    void showSettingsMenu();
     void showFunFact();
     void showAboutDialog();
     void showFullMitLicense();
@@ -99,6 +103,8 @@ private slots:
     void alertUser(QWidget* parent, QMessageBox::Icon boxType, const QString &title, const QString &text);
     bool isTextFile(const QString &filePath);
     void handleRenderVisibility(const QString &filePath);
+    QString replaceLineEndings(const QString &content);
+    void autoSaveHandler();
     void handleOpenFile();
     void handleSaveAsFile();
     void handleSaveFile();
@@ -112,10 +118,14 @@ private:
     QMenuBar *menuBar;
     QMenu *fileMenu;
     QMenu *helpMenu;
+    QAction *settingsAction;
     QLabel *renderingLabel;
     QTextEdit *editor;
     MdezDocBrowser *mdView;
     QSplitter *mdHorizontal;
+
+    QSettings *settings;
+    QTimer *autoSaveTimer;
 
     QAction *openFileAction;
     QAction *saveAsFileAction;
@@ -147,6 +157,10 @@ private:
     bool renderable;
     QString currentFilePath;
     int lastFunFactIdx = -1;
+    QString lineEndingChar;
+    int autoSaveInterval;
+    bool useLineWrapping;
+    bool showFunFacts;
 };
 
 #endif
