@@ -14,15 +14,32 @@ MDEZ++ (mdez) is an **open-source, lightweight, cross-platform C++20 and Qt GUI 
 
 Write raw Markdown or HTML on the left to **preview** rendered text on the right. You can also edit **any other text-based file type.** Examples of these file types include normal text files, code files (e.g., `.cpp`), JSON files, and more! If a preview is not available, the right side will automatically be hidden.
 
+If you do not know Markdown, you can make use of the **Format Menu,** which will automatically apply Markdown syntax for you. Select text and apply a formatting shortcut to apply the styling found in the Format menu directly to the selected text. If no text is selected, the Markdown syntax for the format will be applied and your cursor will be moved so that you can instantly continue typing.
+
 > **New to Markdown?** Check out this [cheat sheet](https://dev.to/thetylern/a-markdown-cheat-sheet-for-anywhere-32bp)!
 
 ### Keyboard Shortcuts
+
+> Select text and apply a formatting shortcut to apply the styling found in the Format menu directly to the selected text. If no text is selected, the Markdown syntax for the format will be applied and your cursor will be moved so that you can instantly continue typing.
+
 | Action | Shortcut | Description |
 | :---: | :---: | :---: |
 | Open File | `Ctrl / Cmd + O` | Open an existing document |
 | Save As | `Ctrl / Cmd + Shift + S` | Save the current document under a new name or location |
 | Save | `Ctrl / Cmd + S` | Save changes to the current document |
 | Print | `Ctrl + P` | Print the current document |
+| Bold | `Ctrl+B` | Insert bold text |
+| Italic | `Ctrl+I` | Insert italicized text |
+| Heading 1 | `Ctrl+Alt+1` | Insert a level one heading |
+| Heading 2 | `Ctrl+Alt+2` | Insert a level two heading |
+| Heading 3 | `Ctrl+Alt+3` | Insert a level three heading |
+| Horizontal Divider | `Ctrl+D` | Insert horizontal divider |
+| Block Quote | `Ctrl+]` | Insert block quote |
+| Strikethrough | `Alt+Shift+5` | Insert strikethrough text |
+| Link | `Ctrl+K` | Insert link |
+| Image | `Ctrl+Shift+I` | Insert image |
+| Code | `Ctrl+\` | Insert code block |
+| Inline Code | `Ctrl+E` | Insert inline code |
 
 ## Downloads & Installation
 

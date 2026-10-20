@@ -127,6 +127,74 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     reportIssueAction->setStatusTip(tr("Open the page to make a GitHub Issue in the MDEZ++ Repository"));
     checkUpdatesAction->setStatusTip(tr("Open the the GitHub Releases page for MDEZ++ to check for updates"));
 
+    formatMenu = new QMenu(this);
+    formatMenu->setTitle("Format");
+
+    boldFormat = new QAction(this);
+    italicFormat = new QAction(this);
+    h1Format = new QAction(this);
+    h2Format = new QAction(this);
+    h3Format = new QAction(this);
+    dividerFormat = new QAction(this);
+    blockquoteFormat = new QAction(this);
+    strikethroughFormat = new QAction(this);
+    linkFormat = new QAction(this);
+    imageFormat = new QAction(this);
+    codeFormat = new QAction(this);
+    inlineCodeFormat = new QAction(this);
+
+    boldFormat->setText(tr("Bold"));
+    italicFormat->setText(tr("Italic"));
+    h1Format->setText(tr("Heading 1"));
+    h2Format->setText(tr("Heading 2"));
+    h3Format->setText(tr("Heading 3"));
+    dividerFormat->setText(tr("Horizontal Divider"));
+    blockquoteFormat->setText(tr("Block Quote"));
+    strikethroughFormat->setText(tr("Strikethrough"));
+    linkFormat->setText(tr("Link"));
+    imageFormat->setText(tr("Image"));
+    codeFormat->setText(tr("Code"));
+    inlineCodeFormat->setText(tr("Inline Code"));
+
+    boldFormat->setShortcut(QKeySequence(tr("Ctrl+B")));
+    italicFormat->setShortcut(QKeySequence(tr("Ctrl+I")));
+    h1Format->setShortcut(QKeySequence(tr("Ctrl+Alt+1")));
+    h2Format->setShortcut(QKeySequence(tr("Ctrl+Alt+2")));
+    h3Format->setShortcut(QKeySequence(tr("Ctrl+Alt+3")));
+    dividerFormat->setShortcut(QKeySequence(tr("Ctrl+D")));
+    blockquoteFormat->setShortcut(QKeySequence(tr("Ctrl+]")));
+    strikethroughFormat->setShortcut(QKeySequence(tr("Alt+Shift+5")));
+    linkFormat->setShortcut(QKeySequence(tr("Ctrl+K")));
+    imageFormat->setShortcut(QKeySequence(tr("Ctrl+Shift+I")));
+    codeFormat->setShortcut(QKeySequence(tr("Ctrl+\\")));
+    inlineCodeFormat->setShortcut(QKeySequence(tr("Ctrl+E")));
+
+    boldFormat->setShortcutContext(Qt::ApplicationShortcut);
+    italicFormat->setShortcutContext(Qt::ApplicationShortcut);
+    h1Format->setShortcutContext(Qt::ApplicationShortcut);
+    h2Format->setShortcutContext(Qt::ApplicationShortcut);
+    h3Format->setShortcutContext(Qt::ApplicationShortcut);
+    dividerFormat->setShortcutContext(Qt::ApplicationShortcut);
+    blockquoteFormat->setShortcutContext(Qt::ApplicationShortcut);
+    strikethroughFormat->setShortcutContext(Qt::ApplicationShortcut);
+    linkFormat->setShortcutContext(Qt::ApplicationShortcut);
+    imageFormat->setShortcutContext(Qt::ApplicationShortcut);
+    codeFormat->setShortcutContext(Qt::ApplicationShortcut);
+    inlineCodeFormat->setShortcutContext(Qt::ApplicationShortcut);
+
+    this->addAction(boldFormat);
+    this->addAction(italicFormat);
+    this->addAction(h1Format);
+    this->addAction(h2Format);
+    this->addAction(h3Format);
+    this->addAction(dividerFormat);
+    this->addAction(blockquoteFormat);
+    this->addAction(strikethroughFormat);
+    this->addAction(linkFormat);
+    this->addAction(imageFormat);
+    this->addAction(codeFormat);
+    this->addAction(inlineCodeFormat);
+
     settingsAction = new QAction(this);
     settingsAction->setText(tr("Settings"));
     settingsAction->setStatusTip(tr("Configure settings in MDEZ++"));
@@ -202,6 +270,43 @@ QSplitter > QWidget {
         this->openLink(QUrl("https://github.com/tyleruploads/mdez/releases/latest/"));
     });
 
+    connect(boldFormat, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("bold");
+    });
+    connect(italicFormat, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("italic");
+    });
+    connect(h1Format, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("h1");
+    });
+    connect(h2Format, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("h2");
+    });
+    connect(h3Format, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("h3");
+    });
+    connect(dividerFormat, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("horizontal divider");
+    });
+    connect(blockquoteFormat, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("blockquote");
+    });
+    connect(strikethroughFormat, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("strikethrough");
+    });
+    connect(linkFormat, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("link");
+    });
+    connect(imageFormat, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("image");
+    });
+    connect(codeFormat, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("code");
+    });
+    connect(inlineCodeFormat, &QAction::triggered, this, [this]() {
+        MainWindow::formatHandler("inline code");
+    });
+
     connect(settingsAction, &QAction::triggered, this, &MainWindow::showSettingsMenu);
 
     fileMenu->addAction(openFileAction);
@@ -210,9 +315,11 @@ QSplitter > QWidget {
 #endif
     fileMenu->addActions({saveFileAction, printAction, exportHtmlAction});
     helpMenu->addActions({aboutAction, mitLicenseAction, aboutQtAction, funFactAction, mdCheatSheetAction, keyboardCombosAction, reportIssueAction, checkUpdatesAction});
+    formatMenu->addActions({boldFormat, italicFormat, h1Format, h2Format, h3Format, dividerFormat, blockquoteFormat, strikethroughFormat, linkFormat, imageFormat, codeFormat, inlineCodeFormat});
 
     menuBar->addMenu(fileMenu);
     menuBar->addMenu(helpMenu);
+    menuBar->addMenu(formatMenu);
     menuBar->addAction(settingsAction);
 
     mdHorizontal->addWidget(editor);
@@ -392,6 +499,77 @@ void MainWindow::showSettingsMenu()
     settingsDialog->show();
 }
 
+void MainWindow::formatHandler(const QString &format)
+{
+    QTextCursor cursor = editor->textCursor();
+
+    if (format == "bold" || format == "italic" || format == "strikethrough" || format == "inline code") {
+        if (cursor.hasSelection()) {
+            QString selectedText = cursor.selectedText();
+            QString mdFragment = (format == "bold") ? "**" : (format == "italic" ? "*" : (format == "strikethrough" ? "~~" : "`"));
+            cursor.insertText(mdFragment + selectedText + mdFragment);
+        } else {
+            cursor.insertText((format == "bold") ? "****" : (format == "italic" ? "**" : (format == "strikethrough" ? "~~~~" : "``")));
+            cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, (format == "bold" || format == "strikethrough") ? 2 : 1);
+            editor->setTextCursor(cursor);
+        }
+    } else if (format.startsWith('h') && format.length() == 2) {
+        int headerNum = format[1].digitValue();
+
+        if (cursor.hasSelection()) {
+            QString selectedText = cursor.selectedText();
+            QString mdFragment = QString("#").repeated(headerNum);
+            cursor.insertText(mdFragment + " " + selectedText);
+        } else {
+            cursor.insertText("\n" + QString("#").repeated(headerNum) + " ");
+            editor->setTextCursor(cursor);
+        }
+    } else if (format == "link") {
+        if (cursor.hasSelection()) {
+            QString text = cursor.selectedText();
+
+            if (text.contains(".") && !text.contains(" ")) cursor.insertText("[](" + text + ")");
+            else cursor.insertText("[" + text + "]()");
+        } else {
+            cursor.insertText("[]()");
+            cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 3);
+            editor->setTextCursor(cursor);
+        }
+    } else if (format == "image") {
+       if (cursor.hasSelection()) {
+            QString text = cursor.selectedText();
+
+            qDebug() << QUrl(text, QUrl::StrictMode).isValid();
+
+            if (text.contains(".") && !text.contains(" ")) cursor.insertText("![](" + text + ")");
+            else cursor.insertText("![" + text + "]()");
+        } else {
+            cursor.insertText("![]()");
+            cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 3);
+            editor->setTextCursor(cursor);
+        }
+    } else if (format == "code") {
+        if (cursor.hasSelection()) {
+            QString selectedText = cursor.selectedText();
+            cursor.insertText("```\n" + selectedText + "\n```");
+        } else {
+            cursor.insertText("\n```\n\n```");
+            cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, 1);
+            editor->setTextCursor(cursor);
+        }
+    } else if (format == "horizontal divider") {
+        cursor.insertText("\n---\n");
+    } else if (format == "blockquote") {
+        if (cursor.hasSelection()) {
+            QString selectedText = cursor.selectedText();
+            cursor.insertText("> " + selectedText);
+        } else {
+            cursor.insertText("\n> ");
+            editor->setTextCursor(cursor);
+        }
+    }
+}
+
 void MainWindow::showFunFact()
 {
     QFile file = QFile(":/funfacts.txt");
@@ -479,35 +657,34 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 void MainWindow::openKeyboardCombos()
 {
     QString text = tr(R"(
-<table>
-    <tr>
-        <td>Action</td>
-        <td>Shortcut</td>
-        <td>Description</td>
-    </tr>
-    <tr>
-        <td>Open File</td>
-        <td>`Ctrl / Cmd + O`</td>
-        <td>Open an existing document</td>
-    </tr>
-    <tr>
-        <td>Save As</td>
-        <td>`Ctrl / Cmd + Shift + S`</td>
-        <td>Save the current document under a new name or location</td>
-    </tr>
-    <tr>
-        <td>Save</td>
-        <td>`Ctrl / Cmd + S`</td>
-        <td>Save changes to the current document</td>
-    </tr>
-    <tr>
-        <td>Print</td>
-        <td>`Ctrl + P`</td>
-        <td>Print the current document</td>
-    </tr>
-</table>
+> Select text and apply a formatting shortcut to apply the styling found in the Format menu directly to the selected text. If no text is selected, the Markdown syntax for the format will be applied and your cursor will be moved so that you can instantly continue typing.
+
+| Action | Shortcut | Description |
+| :---: | :---: | :---: |
+| Open File | `Ctrl / Cmd + O` | Open an existing document |
+| Save As | `Ctrl / Cmd + Shift + S` | Save the current document under a new name or location |
+| Save | `Ctrl / Cmd + S` | Save changes to the current document |
+| Print | `Ctrl + P` | Print the current document |
+| Bold | `Ctrl+B` | Insert bold text |
+| Italic | `Ctrl+I` | Insert italicized text |
+| Heading 1 | `Ctrl+Alt+1` | Insert a level one heading |
+| Heading 2 | `Ctrl+Alt+2` | Insert a level two heading |
+| Heading 3 | `Ctrl+Alt+3` | Insert a level three heading |
+| Horizontal Divider | `Ctrl+D` | Insert horizontal divider |
+| Block Quote | `Ctrl+]` | Insert block quote |
+| Strikethrough | `Alt+Shift+5` | Insert strikethrough text |
+| Link | `Ctrl+K` | Insert link |
+| Image | `Ctrl+Shift+I` | Insert image |
+| Code | `Ctrl+\` | Insert code block |
+| Inline Code | `Ctrl+E` | Insert inline code |
+
 )");
-    QMessageBox::information(this, "Keyboard Combinations", text);
+    QMessageBox msgBox(QMessageBox::Information, "Keyboard Combinations", "", QMessageBox::Ok, this);
+
+    msgBox.setText(text);
+    msgBox.setTextFormat(Qt::MarkdownText);
+
+    msgBox.exec();
 }
 
 void MainWindow::openLink(const QUrl &link)

@@ -93,6 +93,7 @@ private slots:
     void updateWindowTitle();
     void initSettingVars();
     void showSettingsMenu();
+    void formatHandler(const QString &format);
     void showFunFact();
     void showAboutDialog();
     void showFullMitLicense();
@@ -118,6 +119,7 @@ private:
     QMenuBar *menuBar;
     QMenu *fileMenu;
     QMenu *helpMenu;
+    QMenu *formatMenu;
     QAction *settingsAction;
     QLabel *renderingLabel;
     QTextEdit *editor;
@@ -141,6 +143,19 @@ private:
     QAction *keyboardCombosAction;
     QAction *reportIssueAction;
     QAction *checkUpdatesAction;
+
+    QAction *boldFormat;
+    QAction *italicFormat;
+    QAction *h1Format;
+    QAction *h2Format;
+    QAction *h3Format;
+    QAction *dividerFormat;
+    QAction *blockquoteFormat;
+    QAction *strikethroughFormat;
+    QAction *linkFormat;
+    QAction *imageFormat;
+    QAction *codeFormat;
+    QAction *inlineCodeFormat;
 
     QStatusBar *statusBar;
     QLabel *versionLabel;
