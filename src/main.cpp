@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include <QCoreApplication>
 #include <QApplication>
+#include <QStyleFactory>
 #include <QWidget>
 #include <QIcon>
 
@@ -8,6 +9,8 @@
 int main(int argc, char **argv)
 {
     QApplication app (argc, argv);
+
+    app.setStyle(QStyleFactory::create("Fusion"));
 
     QCoreApplication::setOrganizationName("tyleruploads");
     QCoreApplication::setOrganizationDomain("https://github.com/tyleruploads");
