@@ -648,7 +648,10 @@ void MainWindow::showFunFact()
 
         QObject::connect(continueBtn, &QPushButton::clicked, this, [&msgBox, this]() {
             msgBox.accept();
-            this->showFunFact();
+            
+            QTimer::singleShot(0, this, [this]() {
+                this->showFunFact();
+            });
         });
 
         msgBox.setStyleSheet("QDialogButtonBox { qproperty-centerButtons: true; }");
