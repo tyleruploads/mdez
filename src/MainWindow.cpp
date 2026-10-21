@@ -343,8 +343,10 @@ QSplitter > QWidget {
 
     if (showFunFacts) QTimer::singleShot(1, this, &MainWindow::showFunFact);
 
+#ifndef Q_OS_WASM
     autoSaveTimer = new QTimer(this);
     MainWindow::autoSaveHandler();
+#endif
 }
 
 void MainWindow::handleEditorInput()
@@ -442,7 +444,9 @@ void MainWindow::updateFontPointSize(const int &editorSize, const int &renderSiz
 void MainWindow::initSettingVars()
 {
     lineEndingChar = settings->value("editor/lineEndings", "\n").toString();
+#ifndef Q_OS_WASM
     autoSaveInterval = settings->value("editor/autoSaveInterval", 60).toInt();
+#endif
     useLineWrapping = settings->value("editor/enableLineWrapping", true).toBool();
     showFunFacts = settings->value("other/showFunFacts", true).toBool();
 
@@ -462,9 +466,11 @@ void MainWindow::showSettingsMenu()
 
     QFormLayout *formLayout = new QFormLayout(settingsDialog);
 
+#ifndef Q_OS_WASM
     QSpinBox *autoSaveSpin = new QSpinBox(settingsDialog);
     autoSaveSpin->setRange(10, 100);
     autoSaveSpin->setSingleStep(10);
+#endif
 
     QSpinBox *editorFontSizeSpin = new QSpinBox(settingsDialog);
     editorFontSizeSpin->setRange(7, 36);
@@ -482,14 +488,18 @@ void MainWindow::showSettingsMenu()
 
     QCheckBox *funFactsCheck = new QCheckBox(settingsDialog); 
 
+#ifndef Q_OS_WASM
     formLayout->addRow("Seconds between autosave:", autoSaveSpin);
+#endif
     formLayout->addRow("Font Size for Editor:", editorFontSizeSpin);
     formLayout->addRow("Relative Font Size for Render\n(based on Body Text)", renderFontSizeSpin);
     formLayout->addRow("End of Line Character:", lineEndingCombo);
     formLayout->addRow("Enable Line Wrapping in Editor:", enableLineWrappingCheck);
     formLayout->addRow("Show fun facts after application initialization:", funFactsCheck);
 
+#ifndef Q_OS_WASM
     autoSaveSpin->setValue(settings->value("editor/autoSaveInterval", 30).toInt());
+#endif
     editorFontSizeSpin->setValue(settings->value("editor/fontSize", 10).toInt());
     renderFontSizeSpin->setValue(settings->value("render/fontSize", 12).toInt());
     enableLineWrappingCheck->setChecked(settings->value("editor/enableLineWrapping", true).toBool());
@@ -501,12 +511,14 @@ void MainWindow::showSettingsMenu()
         lineEndingCombo->setCurrentIndex(endingIndex);
     }
 
+#ifndef Q_OS_WASM
     connect(autoSaveSpin, &QSpinBox::valueChanged, [this](int value) {
         settings->setValue("editor/autoSaveInterval", value);
         settings->sync();
         autoSaveInterval = value;
         autoSaveHandler();
     });
+#endif
 
     connect(editorFontSizeSpin, &QSpinBox::valueChanged, [this](int value) {
         settings->setValue("editor/fontSize", value);
@@ -851,6 +863,7 @@ QString MainWindow::replaceLineEndings(const QString &content)
     return result;
 }
 
+#ifndef Q_OS_WASM
 void MainWindow::autoSaveHandler()
 {
     autoSaveTimer->stop();
@@ -870,6 +883,7 @@ void MainWindow::autoSaveHandler()
     if (autoSaveInterval > 0)
         autoSaveTimer->start(autoSaveInterval * 1000);
 }
+#endif
 
 void MainWindow::handleOpenFile()
 {

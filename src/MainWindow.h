@@ -106,7 +106,9 @@ private slots:
     bool isTextFile(const QString &filePath);
     void handleRenderVisibility(const QString &filePath);
     QString replaceLineEndings(const QString &content);
+#ifndef Q_OS_WASM
     void autoSaveHandler();
+#endif
     void handleOpenFile();
     void handleSaveAsFile();
     void handleSaveFile();
@@ -174,7 +176,9 @@ private:
     QString currentFilePath;
     int lastFunFactIdx = -1;
     QString lineEndingChar;
+#ifndef Q_OS_WASM
     int autoSaveInterval;
+#endif
     bool useLineWrapping;
     bool showFunFacts;
 };
