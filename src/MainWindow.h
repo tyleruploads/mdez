@@ -121,6 +121,7 @@ private:
     QLabel *header;
     QMenuBar *menuBar;
     QMenu *fileMenu;
+    QMenu *editMenu;
     QMenu *helpMenu;
     QMenu *formatMenu;
     QAction *settingsAction;
@@ -137,6 +138,13 @@ private:
     QAction *saveFileAction;
     QAction *printAction;
     QAction *exportHtmlAction;
+
+    QAction *undoAction;
+    QAction *redoAction;
+    QAction *copyAction;
+    QAction *pasteAction;
+    QAction *cutAction;
+    QAction *selectAllAction;
 
     QAction *aboutAction;
     QAction *mitLicenseAction;

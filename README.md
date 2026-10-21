@@ -40,6 +40,12 @@ If you do not know Markdown, you can make use of the **Format Menu,** which will
 | Image | `Ctrl+Shift+I` | Insert image |
 | Code | `Ctrl+\` | Insert code block |
 | Inline Code | `Ctrl+E` | Insert inline code |
+| Undo | `Ctrl+Z` | Undo latest change to text |
+| Redo | `Ctrl+Shift+Z` | Redo latest undone change to text |
+| Copy | `Ctrl+C` | Copy selected text |
+| Paste | `Ctrl+V` | Paste text from clipboard |
+| Cut | `Ctrl+X` | Copy and delete selected text |
+| Select All | `Ctrl+A` | Select all text from editor |
 
 ## Downloads & Installation
 

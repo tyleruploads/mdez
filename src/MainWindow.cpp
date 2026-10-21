@@ -97,6 +97,44 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     this->addAction(saveFileAction);
     this->addAction(printAction);
 
+    editMenu = new QMenu(this);
+    editMenu->setTitle("Edit");
+
+    undoAction = new QAction(this);
+    redoAction = new QAction(this);
+    copyAction = new QAction(this);
+    pasteAction = new QAction(this);
+    cutAction = new QAction(this);
+    selectAllAction = new QAction(this);
+
+    undoAction->setText(tr("Undo"));
+    redoAction->setText(tr("Redo"));
+    copyAction->setText(tr("Copy"));
+    pasteAction->setText(tr("Paste"));
+    cutAction->setText(tr("Cut"));
+    selectAllAction->setText(tr("Select All"));
+
+    undoAction->setShortcut(QKeySequence::Undo);
+    redoAction->setShortcut(QKeySequence::Redo);
+    copyAction->setShortcut(QKeySequence::Copy);
+    pasteAction->setShortcut(QKeySequence::Paste);
+    cutAction->setShortcut(QKeySequence::Cut);
+    selectAllAction->setShortcut(QKeySequence::SelectAll);
+
+    undoAction->setShortcutContext(Qt::ApplicationShortcut);
+    redoAction->setShortcutContext(Qt::ApplicationShortcut);
+    copyAction->setShortcutContext(Qt::ApplicationShortcut);
+    pasteAction->setShortcutContext(Qt::ApplicationShortcut);
+    cutAction->setShortcutContext(Qt::ApplicationShortcut);
+    selectAllAction->setShortcutContext(Qt::ApplicationShortcut);
+
+    this->addAction(undoAction);
+    this->addAction(redoAction);
+    this->addAction(copyAction);
+    this->addAction(pasteAction);
+    this->addAction(cutAction);
+    this->addAction(selectAllAction);
+
     helpMenu = new QMenu(this);
     helpMenu->setTitle("Help");
 
@@ -253,6 +291,14 @@ QSplitter > QWidget {
     connect(printAction, &QAction::triggered, this, &MainWindow::printDocument);
     connect(exportHtmlAction, &QAction::triggered, this, &MainWindow::exportHtml);
 
+    connect(undoAction, &QAction::triggered, this, [this]() {editor->undo();});
+    connect(redoAction, &QAction::triggered, this, [this]() {editor->redo();});
+    connect(copyAction, &QAction::triggered, this, [this]() {editor->copy();});
+    connect(pasteAction, &QAction::triggered, this, [this]() {editor->paste();});
+    connect(cutAction, &QAction::triggered, this, [this]() {editor->cut();});
+    connect(selectAllAction, &QAction::triggered, this, [this]() {editor->selectAll();});
+
+
     connect(aboutAction, &QAction::triggered, this, &MainWindow::showAboutDialog);
     connect(mitLicenseAction, &QAction::triggered, this, &MainWindow::showFullMitLicense);
     connect(funFactAction, &QAction::triggered, this, &MainWindow::showFunFact);
@@ -314,10 +360,12 @@ QSplitter > QWidget {
     fileMenu->addAction(saveAsFileAction);
 #endif
     fileMenu->addActions({saveFileAction, printAction, exportHtmlAction});
+    editMenu->addActions({undoAction, redoAction, copyAction, pasteAction, cutAction, selectAllAction});
     helpMenu->addActions({aboutAction, mitLicenseAction, aboutQtAction, funFactAction, mdCheatSheetAction, keyboardCombosAction, reportIssueAction, checkUpdatesAction});
     formatMenu->addActions({boldFormat, italicFormat, h1Format, h2Format, h3Format, dividerFormat, blockquoteFormat, strikethroughFormat, linkFormat, imageFormat, codeFormat, inlineCodeFormat});
 
     menuBar->addMenu(fileMenu);
+    menuBar->addMenu(editMenu);
     menuBar->addMenu(helpMenu);
     menuBar->addMenu(formatMenu);
     menuBar->addAction(settingsAction);
@@ -760,7 +808,12 @@ void MainWindow::openKeyboardCombos()
 | Image | `Ctrl+Shift+I` | Insert image |
 | Code | `Ctrl+\` | Insert code block |
 | Inline Code | `Ctrl+E` | Insert inline code |
-
+| Undo | `Ctrl+Z` | Undo latest change to text |
+| Redo | `Ctrl+Shift+Z` | Redo latest undone change to text |
+| Copy | `Ctrl+C` | Copy selected text |
+| Paste | `Ctrl+V` | Paste text from clipboard |
+| Cut | `Ctrl+X` | Copy and delete selected text |
+| Select All | `Ctrl+A` | Select all text from editor |
 )");
     QMessageBox msgBox(QMessageBox::Information, "Keyboard Combinations", "", QMessageBox::Ok, this);
 
