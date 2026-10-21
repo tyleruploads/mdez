@@ -916,7 +916,7 @@ void MainWindow::handleSaveFile()
     QByteArray fileData = editor->toPlainText().toUtf8();
     QString hint = currentFilePath.isEmpty() ? "document.md" : currentFilePath;
 
-    QFileDialog::saveFileContent(MainWindow::replaceFileEndings(fileData), hint);
+    QFileDialog::saveFileContent(MainWindow::replaceLineEndings(fileData), hint);
 
     this->statusBar->clearMessage();
     this->statusBar->showMessage(QString("Successfully Saved as %1").arg(hint), 3000);
