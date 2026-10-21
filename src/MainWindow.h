@@ -177,6 +177,7 @@ private:
     int lastFunFactIdx = -1;
     QString lineEndingChar;
 #ifndef Q_OS_WASM
+    bool autoSaveEnabled;
     int autoSaveInterval;
 #endif
     bool useLineWrapping;

@@ -445,6 +445,7 @@ void MainWindow::initSettingVars()
 {
     lineEndingChar = settings->value("editor/lineEndings", "\n").toString();
 #ifndef Q_OS_WASM
+    autoSaveEnabled = settings->value("editor/autoSaveEnabled", false).toBool();
     autoSaveInterval = settings->value("editor/autoSaveInterval", 60).toInt();
 #endif
     useLineWrapping = settings->value("editor/enableLineWrapping", true).toBool();
@@ -467,9 +468,17 @@ void MainWindow::showSettingsMenu()
     QFormLayout *formLayout = new QFormLayout(settingsDialog);
 
 #ifndef Q_OS_WASM
+    QHBoxLayout *autoSaveLayout = new QHBoxLayout();
+
+    QCheckBox *autoSaveCheck = new QCheckBox(settingsDialog);
     QSpinBox *autoSaveSpin = new QSpinBox(settingsDialog);
     autoSaveSpin->setRange(10, 100);
     autoSaveSpin->setSingleStep(10);
+
+    autoSaveLayout->addWidget(autoSaveCheck);
+    autoSaveLayout->addWidget(autoSaveSpin);
+
+    autoSaveLayout->setContentsMargins(0, 0, 0, 0);
 #endif
 
     QSpinBox *editorFontSizeSpin = new QSpinBox(settingsDialog);
@@ -489,7 +498,7 @@ void MainWindow::showSettingsMenu()
     QCheckBox *funFactsCheck = new QCheckBox(settingsDialog); 
 
 #ifndef Q_OS_WASM
-    formLayout->addRow("Seconds between autosave:", autoSaveSpin);
+    formLayout->addRow("Autosave (Seconds):", autoSaveLayout);
 #endif
     formLayout->addRow("Font Size for Editor:", editorFontSizeSpin);
     formLayout->addRow("Relative Font Size for Render\n(based on Body Text)", renderFontSizeSpin);
@@ -498,7 +507,10 @@ void MainWindow::showSettingsMenu()
     formLayout->addRow("Show fun facts after application initialization:", funFactsCheck);
 
 #ifndef Q_OS_WASM
+    autoSaveCheck->setChecked(settings->value("editor/autoSaveEnabled", false).toBool());
     autoSaveSpin->setValue(settings->value("editor/autoSaveInterval", 30).toInt());
+
+    autoSaveSpin->setEnabled(autoSaveCheck->isChecked());
 #endif
     editorFontSizeSpin->setValue(settings->value("editor/fontSize", 10).toInt());
     renderFontSizeSpin->setValue(settings->value("render/fontSize", 12).toInt());
@@ -512,6 +524,15 @@ void MainWindow::showSettingsMenu()
     }
 
 #ifndef Q_OS_WASM
+    connect(autoSaveCheck, &QCheckBox::checkStateChanged, [this, autoSaveSpin](Qt::CheckState state) {
+        settings->setValue("editor/autoSaveEnabled", state);
+        settings->sync();
+
+        autoSaveEnabled = state;
+        autoSaveSpin->setEnabled(state);
+        autoSaveHandler(); // Will exit if autosave is disabled
+    });
+
     connect(autoSaveSpin, &QSpinBox::valueChanged, [this](int value) {
         settings->setValue("editor/autoSaveInterval", value);
         settings->sync();
@@ -880,7 +901,7 @@ void MainWindow::autoSaveHandler()
         }
     });
 
-    if (autoSaveInterval > 0)
+    if (autoSaveEnabled && autoSaveInterval > 0)
         autoSaveTimer->start(autoSaveInterval * 1000);
 }
 #endif
