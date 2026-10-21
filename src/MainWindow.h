@@ -91,6 +91,7 @@ public:
 private slots:
     void handleEditorInput();
     void updateWindowTitle();
+    void updateFontPointSize(const int &editorSize, const int &renderSize);
     void initSettingVars();
     void showSettingsMenu();
     void formatHandler(const QString &format);
