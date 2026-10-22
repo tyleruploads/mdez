@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     app.setStyle(QStyleFactory::create("Fusion"));
 
     QCoreApplication::setOrganizationName("tyleruploads");
-    QCoreApplication::setOrganizationDomain("https://github.com/tyleruploads");
+    QCoreApplication::setApplicationName("github.com/tyleruploads");
     QCoreApplication::setOrganizationDomain("MDEZ++");
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
