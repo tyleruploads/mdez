@@ -38,14 +38,6 @@ target_compile_definitions(mdez PRIVATE
     PROJECT_ROOT_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
-if(NOT EMSCRIPTEN)
-    add_custom_command(TARGET mdez POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_CURRENT_SOURCE_DIR}/media"
-        "${CMAKE_BINARY_DIR}/media"
-    )
-endif()
-
 if(EMSCRIPTEN)
     target_link_options(mdez PRIVATE 
         "-sSINGLE_FILE=1"

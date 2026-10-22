@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     QCoreApplication::setOrganizationDomain("MDEZ++");
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
-    QApplication::setWindowIcon(QIcon("media/docs/mdez-icon.svg"));
+    QApplication::setWindowIcon(QIcon(":/media/docs/mdez-icon.svg"));
 
     MainWindow window;
     window.resize(800, 800);
