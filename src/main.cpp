@@ -1,29 +1,27 @@
 #include "MainWindow.h"
-#include <QCoreApplication>
 #include <QApplication>
+#include <QCoreApplication>
+#include <QIcon>
 #include <QStyleFactory>
 #include <QWidget>
-#include <QIcon>
 
+int main(int argc, char **argv) {
+  QApplication app(argc, argv);
 
-int main(int argc, char **argv)
-{
-    QApplication app (argc, argv);
+  app.setStyle(QStyleFactory::create("Fusion"));
 
-    app.setStyle(QStyleFactory::create("Fusion"));
+  QCoreApplication::setOrganizationName("tyleruploads");
+  QCoreApplication::setApplicationName("github.com/tyleruploads");
+  QCoreApplication::setOrganizationDomain("MDEZ++");
+  QCoreApplication::setApplicationVersion(APP_VERSION);
 
-    QCoreApplication::setOrganizationName("tyleruploads");
-    QCoreApplication::setApplicationName("github.com/tyleruploads");
-    QCoreApplication::setOrganizationDomain("MDEZ++");
-    QCoreApplication::setApplicationVersion(APP_VERSION);
+  QApplication::setWindowIcon(QIcon(":/media/docs/mdez-icon.svg"));
 
-    QApplication::setWindowIcon(QIcon(":/media/docs/mdez-icon.svg"));
+  MainWindow window;
+  window.resize(800, 800);
+  window.setWindowTitle("Untitled | MDEZ++");
 
-    MainWindow window;
-    window.resize(800, 800);
-    window.setWindowTitle("Untitled | MDEZ++"); 
+  window.show();
 
-    window.show();
-
-    return app.exec();
+  return app.exec();
 }
