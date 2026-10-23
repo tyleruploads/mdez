@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
+include(GNUInstallDirs)
 project(mdez VERSION 0.11.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -44,3 +45,13 @@ if(EMSCRIPTEN)
         "-sASYNCIFY=1"
     )
 endif()
+
+install(TARGETS mdez RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES data/io.github.tyleruploads.mdez.desktop
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+install(FILES data/io.github.tyleruploads.mdez.metainfo.xml
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
+install(FILES data/io.github.tyleruploads.mdez.svg
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
+install(FILES data/io.github.tyleruploads.mdez.png
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/16x16/apps)

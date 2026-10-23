@@ -1,6 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
-    <file>../media/docs/mdez-icon.svg</file>
+    <file alias="data/io.github.tyleruploads.mdez.png">../data/io.github.tyleruploads.mdez.png</file>
     <file>funfacts.txt</file>
 </qresource>
 </RCC>

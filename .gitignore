@@ -118,3 +118,6 @@ CMakeLists.txt.user*
 # End of https://www.toptal.com/developers/gitignore/api/c++,cmake,qt,linux
 
 build/
+.flatpak-builder/
+repo/
+builddir/

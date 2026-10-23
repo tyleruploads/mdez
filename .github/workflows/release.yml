@@ -115,16 +115,6 @@ jobs:
 
           chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-qt-x86_64.AppImage
 
-          echo "[Desktop Entry]" > mdez.desktop
-          echo "Type=Application" >> mdez.desktop
-          echo "Name=MDEZ++" >> mdez.desktop
-          echo "Comment=A lightweight C++20 and Qt GUI Markdown editor" >> mdez.desktop
-          echo "Exec=mdez" >> mdez.desktop
-          echo "Icon=mdez-icon" >> mdez.desktop
-          echo "Terminal=false" >> mdez.desktop
-          echo "Categories=Utility;" >> mdez.desktop
-
-
           export QMAKE=$QT_ROOT_DIR/bin/qmake
           export EXTRA_QT_PLUGIN_ARGS="--appimage-extract-and-run"
 
@@ -132,8 +122,8 @@ jobs:
           --appimage-extract-and-run \
           --appdir=AppDir \
           --executable=build/mdez \
-          --desktop-file=mdez.desktop \
-          --icon-file=${{ github.workspace }}/media/docs/mdez-icon.png \
+          --desktop-file=${{ github.workspace }}/data/io.github.tyleruploads.mdez.desktop \
+          --icon-file=${{ github.workspace }}/data/io.github.tyleruploads.mdez.png \
           --plugin=qt \
           --output=appimage
 

@@ -464,13 +464,13 @@ void MainWindow::handleEditorInput()
 
 void MainWindow::updateWindowTitle()
 {
-    QString displayPath = currentFilePath.isEmpty() ? "Untitled" : currentFilePath;
+    QString displayPath = currentFilePath.isEmpty() ? "Untitled" : QFileInfo(currentFilePath).fileName();
 
     if (unsavedFileChanges == true)
         displayPath += "*";
 
     setWindowTitle(QString("%1 | MDEZ++").arg(displayPath));
-    pathLabel->setText(displayPath);
+    pathLabel->setText(QFileInfo(displayPath).fileName());
 }
 
 // Pass -1 for any value to skip its font point size change
