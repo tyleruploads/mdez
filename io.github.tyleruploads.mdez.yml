@@ -16,8 +16,8 @@ modules:
     buildsystem: cmake-ninja
     sources:
       - type: archive
-        url: https://github.com/tyleruploads/mdez/archive/refs/tags/v0.13.0.tar.gz
-        sha256: acc7eb842bc53478f60b185e4e6f8aa5028f80b1f1595f8fcc3fb55761a1f62f
+        url: https://github.com/tyleruploads/mdez/archive/refs/tags/v0.14.0.tar.gz
+        sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
         x-checker-data:
           type: json
           url: https://api.github.com/repos/tyleruploads/mdez/releases/latest
