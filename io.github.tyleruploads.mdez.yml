@@ -17,7 +17,7 @@ modules:
     sources:
       - type: archive
         url: https://github.com/tyleruploads/mdez/archive/refs/tags/v0.14.0.tar.gz
-        sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        sha256: eb7f47a5122dbc9ce87067337aab1505617b43f23840785efb729935e44d05f2
         x-checker-data:
           type: json
           url: https://api.github.com/repos/tyleruploads/mdez/releases/latest
