@@ -4,7 +4,7 @@
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>MIT</project_license>
     <name>MDEZ++</name>
-    <summary>A lightweight C++20 and Qt GUI Markdown editor</summary>
+    <summary>Lightweight Markdown Editor</summary>
     <description>
         <p>
 MDEZ++ (mdez) is an open-source, lightweight, cross-platform C++20 and Qt GUI Markdown editor. Instead of a WYSIWYG editor, MDEZ++ renders a real-time live preview of your text in a split-screen pane using a fast, native, and minimal GUI. MDEZ++ can also edit any text-based file format, including HTML, plain text, and code files, making it highly versatile.</p>
