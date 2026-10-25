@@ -106,14 +106,36 @@ If you do not know Markdown, you can make use of the **Format Menu,** which will
 ## Downloads & Installation
 
 Currently, **no installation is required**! All you need to do is download and open the appropriate **portable, pre-compiled binary** for your operating system or **open the website.**
+If you would like to install MDEZ++ instead of just running the portable binary and you use Linux, you can use the **Linux Setup Script.**
 
 > Certain features are not available in the Web download due to browser restrictions and other factors, such as choosing file save paths.
+
+### Linux Setup Script
+
+To run the Linux Setup Script, run the following command in your terminal:
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/tyleruploads/mdez/refs/heads/main/setup.sh)
+```
+
+You can also download the file at [https://raw.githubusercontent.com/tyleruploads/mdez/refs/heads/main/setup.sh](https://raw.githubusercontent.com/tyleruploads/mdez/refs/heads/main/setup.sh), mark it as executable, then run it.
+
+In the script, you have 4 options:
+
+1) **Install Remote AppImage:** Installs the AppImage attached to the latest GitHub Release
+2) **Compile Locally and Install:** Locally compiles and installs the latest state of the live repository
+3) **Uninstall MDEZ++:** Uninstalls MDEZ++
+4) **Exit:** Exits the script
+
+---
+
+### Downloads Table
 
 | Linux | Windows | macOS | Web Download | Web Page |
 | :---: | :---:   | :---: | :---: | :---: |
 | [MDEZ++ AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage) | [MDEZ++ Windows Executable](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported | [MDEZ++ Web (WASM) Download](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-wasm.zip) | [MDEZ++ Web (WASM) on GitHub Pages](https://tyleruploads.github.io/mdez/)
 
-## Note for Linux Users
+#### Note for Linux Users
 
 You must mark the **standalone AppImage** as executable before it can be run!
 
@@ -121,7 +143,7 @@ You must mark the **standalone AppImage** as executable before it can be run!
 chmod +x MDEZ++-x86_64.AppImage
 ```
 
-## Note for Windows Users
+#### Note for Windows Users
 
 If you do not know what to do with the zip file, follow these steps.
 
