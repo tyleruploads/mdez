@@ -41,7 +41,7 @@ QSplitter > QWidget {
     editor->setAcceptRichText(false);
     editor->setPlaceholderText("Type here");
 
-    mdView = new MdezDocBrowser(this);
+    mdView = new MdezDocBrowser(m_mainWindow, this);
     
     editor->setContentsMargins(0, 0, 0, 0);
     mdView->setContentsMargins(0, 0, 0, 0);
