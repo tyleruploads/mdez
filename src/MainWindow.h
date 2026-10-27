@@ -206,12 +206,25 @@ public:
         if (!fileInfo.exists() || !fileInfo.isFile()) {
             m_mainWindow->closeTab(idx);
 
+            bool isFlatpakPortal = fullPath.contains("/run/user/") && fullPath.contains("/doc/");
+            bool isFlatpak = qEnvironmentVariableIsSet("FLATPAK_ID");
+
+            
+            QString errorMessage;
+            if (isFlatpak && isFlatpakPortal) {
+                errorMessage = tr("\n\nCould not access the file via the Flatpak document portal:\n%1\n\n"
+                            "This usually happens because the application lacks permission to access this file or the file selection session expired. "
+                            "Please try re-opening this file. "
+                            "If that does not work, you can adjust permissions in your System Settings, use a utility like Flatseal, or install a non-Flatpak version of MDEZ++.").arg(fullPath);
+            } else {
+                errorMessage = tr("The file could not be found on the disk:\n%1\nPlease check if the path or file name is correct.").arg(fullPath);
+            }
+
+
             QMessageBox::warning(
                 m_mainWindow,
-                tr("File not found"),
-                tr("The file could not be found on the disk:\n%1\nPlease check if the path or file name is correct.")
-                    .arg(fullPath)
-            );
+                tr("File Access Error"),
+                errorMessage);
             return;
         }
 
