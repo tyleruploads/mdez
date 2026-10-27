@@ -12,6 +12,14 @@ MDEZ++ (mdez) is an open-source, lightweight, cross-platform C++20 and Qt GUI Ma
     <developer id="io.github.tyleruploads">
         <name>Tyleruploads</name>
     </developer>
+    <branding>
+        <color type="primary" scheme_preference="light">#f66151</color>
+        <color type="primary" scheme_preference="dark">#613583</color>
+    </branding>
+    <requires>
+        <control>keyboard</control>
+        <control>pointing</control>
+    </requires>
     <url type="vcs-browser">https://github.com/tyleruploads/mdez</url>
     <url type="homepage">https://github.com/tyleruploads/mdez</url>
     <url type="contribute">https://github.com/tyleruploads/mdez</url>
