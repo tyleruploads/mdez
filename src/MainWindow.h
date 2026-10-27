@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "Tab.h"
 #include <QEventLoop>
 #include <QImage>
 #include <QMessageBox>
@@ -24,6 +25,7 @@ class QString;
 class QUrl;
 class QStatusBar;
 class QSettings;
+class QTabWidget;
 class QTimer;
 
 class MdezDocBrowser : public QTextBrowser {
@@ -87,9 +89,16 @@ public:
   explicit MainWindow(QWidget *parent = nullptr);
   ~MainWindow() override = default;
 
-private slots:
-  void handleEditorInput();
   void updateWindowTitle();
+
+  QLabel *wcLabel;
+  QLabel *posLabel;
+
+private slots:
+  Tab* currentTab() const;
+  void createTab();
+  void closeTab(const int &index); 
+  void refreshTabTitles();
   void updateFontPointSize(const int &editorSize, const int &renderSize);
   void initSettingVars();
   void showSettingsMenu();
@@ -98,25 +107,22 @@ private slots:
   void showAboutDialog();
   void showFullMitLicense();
   void openLink(const QUrl &link);
-  void openKeyboardCombos();
-  int countWords();
-  void updatePosLabel();
+  void openKeyboardCombos();  
   void alertUser(QWidget *parent, QMessageBox::Icon boxType,
                  const QString &title, const QString &text);
-  bool isTextFile(const QString &filePath);
-  void handleRenderVisibility(const QString &filePath);
+  bool isTextFile(const QString &filePath); 
   QString replaceLineEndings(const QString &content);
 #ifndef Q_OS_WASM
   void autoSaveHandler();
 #endif
   void handleOpenFile();
   void handleSaveAsFile();
-  void handleSaveFile();
+  void handleSaveFile(const QString &choice);
+  void saveOneFile(const Tab &tab);
   void printDocument();
   void exportHtml();
 
 private:
-  // Pointers for widgets managed by window
   QVBoxLayout *mainLayout;
   QLabel *header;
   QMenuBar *menuBar;
@@ -125,10 +131,8 @@ private:
   QMenu *helpMenu;
   QMenu *formatMenu;
   QAction *settingsAction;
-  QLabel *renderingLabel;
-  QTextEdit *editor;
-  MdezDocBrowser *mdView;
-  QSplitter *mdHorizontal;
+
+  QTabWidget *tabsLayout;
 
   QSettings *settings;
   QTimer *autoSaveTimer;
@@ -136,6 +140,7 @@ private:
   QAction *openFileAction;
   QAction *saveAsFileAction;
   QAction *saveFileAction;
+  QAction *saveAllFilesAction;
   QAction *printAction;
   QAction *exportHtmlAction;
 
@@ -169,18 +174,17 @@ private:
   QAction *inlineCodeFormat;
 
   QStatusBar *statusBar;
-  QLabel *versionLabel;
-  QLabel *wcLabel;
-  QLabel *posLabel;
+  QLabel *versionLabel; 
   QLabel *pathLabel;
   QWidget *statusSpacer1;
   QWidget *statusSpacer2;
   QWidget *statusSpacer3;
 
+  QTextEdit *m_activeEditor = nullptr;
+
   bool unsavedFileChanges;
   bool isHtml;
   bool renderable;
-  QString currentFilePath;
   int lastFunFactIdx = -1;
   QString lineEndingChar;
 #ifndef Q_OS_WASM

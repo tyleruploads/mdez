@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "Tab.h"
 #ifdef Q_OS_WASM
 #include <emscripten.h>
 #endif
@@ -72,29 +73,35 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 #endif
 
     saveFileAction = new QAction(this);
+    saveAllFilesAction = new QAction(this);
     printAction = new QAction(this);
     exportHtmlAction = new QAction(this);
 
     openFileAction->setText(tr("Open File")); 
     saveFileAction->setText(tr("Save"));
+    saveAllFilesAction->setText(tr("Save All Files"));
     printAction->setText(tr("Print"));
     exportHtmlAction->setText(tr("Export as HTML"));
 
     openFileAction->setStatusTip(tr("Open an existing document")); 
     saveFileAction->setStatusTip(tr("Save changes to the current document"));
+    saveAllFilesAction->setStatusTip(tr("Save all changes to all open documents"));
     printAction->setStatusTip(tr("Print the current document"));
     exportHtmlAction->setStatusTip(tr("Export current document in the HTML format"));
 
     openFileAction->setShortcut(QKeySequence::Open); 
     saveFileAction->setShortcut(QKeySequence(tr("Ctrl+S")));
+    saveAllFilesAction->setShortcut(QKeySequence(tr("Ctrl+Alt+S")));
     printAction->setShortcut(QKeySequence::Print);
    
     openFileAction->setShortcutContext(Qt::ApplicationShortcut); 
     saveFileAction->setShortcutContext(Qt::ApplicationShortcut);
+    saveAllFilesAction->setShortcutContext(Qt::ApplicationShortcut);
     printAction->setShortcutContext(Qt::ApplicationShortcut);
 
     this->addAction(openFileAction); 
     this->addAction(saveFileAction);
+    this->addAction(saveAllFilesAction);
     this->addAction(printAction);
 
     editMenu = new QMenu(this);
@@ -237,35 +244,16 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     settingsAction->setText(tr("Settings"));
     settingsAction->setStatusTip(tr("Configure settings in MDEZ++"));
 
-    renderingLabel = new QLabel("", this);
+    tabsLayout = new QTabWidget(this);
+    tabsLayout->setTabsClosable(true);
 
-    mdHorizontal = new QSplitter();
-    mdHorizontal->setStyleSheet(R"(
-QSplitter {
-    margin: 0px;
-    padding: 0px;
-    border: none;
-}
-
-QSplitter::handle {
-    margin: 0px;
-    padding: 0px;
-}
-
-QSplitter > QWidget {
-    border: none;
-}
-)");
+    QPushButton *newTabButton = new QPushButton("+", this);
+    newTabButton->setFixedSize(30, 34);
+    newTabButton->setToolTip("Open New Tab");
+    newTabButton->setStyleSheet("margin: 4px; padding: 2px 6px;");
+    tabsLayout->setCornerWidget(newTabButton, Qt::TopRightCorner);
+ 
     mainLayout->setContentsMargins(0, 0, 0, 0);
-
-    editor = new QTextEdit(this);
-    editor->setAcceptRichText(false);
-    editor->setPlaceholderText("Type here");
-
-    mdView = new MdezDocBrowser(this);
-    
-    editor->setContentsMargins(0, 0, 0, 0);
-    mdView->setContentsMargins(0, 0, 0, 0);
 
     statusBar = new QStatusBar(this);
     versionLabel = new QLabel(QString("v" APP_VERSION), this);
@@ -282,22 +270,20 @@ QSplitter > QWidget {
     statusSpacer3 = new QWidget(this);
     statusSpacer3->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-    connect(editor, &QTextEdit::textChanged, this, &MainWindow::handleEditorInput);
-
-    connect(editor, &QTextEdit::cursorPositionChanged, this, &MainWindow::updatePosLabel);
+    MainWindow::createTab();
 
     connect(openFileAction, &QAction::triggered, this, &MainWindow::handleOpenFile); 
-    connect(saveFileAction, &QAction::triggered, this, &MainWindow::handleSaveFile);
+    connect(saveFileAction, &QAction::triggered, this, [this]() { MainWindow::handleSaveFile("One"); });
+    connect(saveAllFilesAction, &QAction::triggered, this, [this]() { MainWindow::handleSaveFile("All"); });
     connect(printAction, &QAction::triggered, this, &MainWindow::printDocument);
     connect(exportHtmlAction, &QAction::triggered, this, &MainWindow::exportHtml);
 
-    connect(undoAction, &QAction::triggered, this, [this]() {editor->undo();});
-    connect(redoAction, &QAction::triggered, this, [this]() {editor->redo();});
-    connect(copyAction, &QAction::triggered, this, [this]() {editor->copy();});
-    connect(pasteAction, &QAction::triggered, this, [this]() {editor->paste();});
-    connect(cutAction, &QAction::triggered, this, [this]() {editor->cut();});
-    connect(selectAllAction, &QAction::triggered, this, [this]() {editor->selectAll();});
-
+    connect(undoAction, &QAction::triggered, this, [this]() {currentTab()->getEditor()->undo();});
+    connect(redoAction, &QAction::triggered, this, [this]() {currentTab()->getEditor()->redo();});
+    connect(copyAction, &QAction::triggered, this, [this]() {currentTab()->getEditor()->copy();});
+    connect(pasteAction, &QAction::triggered, this, [this]() {currentTab()->getEditor()->paste();});
+    connect(cutAction, &QAction::triggered, this, [this]() {currentTab()->getEditor()->cut();});
+    connect(selectAllAction, &QAction::triggered, this, [this]() {currentTab()->getEditor()->selectAll();});
 
     connect(aboutAction, &QAction::triggered, this, &MainWindow::showAboutDialog);
     connect(mitLicenseAction, &QAction::triggered, this, &MainWindow::showFullMitLicense);
@@ -355,11 +341,15 @@ QSplitter > QWidget {
 
     connect(settingsAction, &QAction::triggered, this, &MainWindow::showSettingsMenu);
 
+
+    connect(tabsLayout, &QTabWidget::tabCloseRequested, this, &MainWindow::closeTab);
+    connect(newTabButton, &QPushButton::clicked, this, &MainWindow::createTab);
+
     fileMenu->addAction(openFileAction);
 #ifndef Q_OS_WASM
     fileMenu->addAction(saveAsFileAction);
 #endif
-    fileMenu->addActions({saveFileAction, printAction, exportHtmlAction});
+    fileMenu->addActions({saveFileAction, saveAllFilesAction, printAction, exportHtmlAction});
     editMenu->addActions({undoAction, redoAction, copyAction, pasteAction, cutAction, selectAllAction});
     helpMenu->addActions({aboutAction, mitLicenseAction, aboutQtAction, funFactAction, mdCheatSheetAction, keyboardCombosAction, reportIssueAction, checkUpdatesAction});
     formatMenu->addActions({boldFormat, italicFormat, h1Format, h2Format, h3Format, dividerFormat, blockquoteFormat, strikethroughFormat, linkFormat, imageFormat, codeFormat, inlineCodeFormat});
@@ -369,9 +359,6 @@ QSplitter > QWidget {
     menuBar->addMenu(helpMenu);
     menuBar->addMenu(formatMenu);
     menuBar->addAction(settingsAction);
-
-    mdHorizontal->addWidget(editor);
-    mdHorizontal->addWidget(mdView);
 
     statusBar->addWidget(versionLabel);
     statusBar->addWidget(statusSpacer1, 1); // Expands
@@ -383,8 +370,7 @@ QSplitter > QWidget {
  
     mainLayout->addWidget(header);
     mainLayout->addWidget(menuBar);
-    mainLayout->addWidget(renderingLabel);
-    mainLayout->addWidget(mdHorizontal, 1);
+    mainLayout->addWidget(tabsLayout, 1);
     mainLayout->addWidget(statusBar);
 
     MainWindow::initSettingVars();
@@ -397,74 +383,53 @@ QSplitter > QWidget {
 #endif
 }
 
-void MainWindow::handleEditorInput()
+Tab* MainWindow::currentTab() const {
+    return qobject_cast<Tab*>(tabsLayout->currentWidget());
+}
+
+void MainWindow::createTab()
 {
-    QString editorText = editor->toPlainText();
+    Tab *newTab = new Tab(this);
 
-    if (!isHtml) {
-        QTextDocument tempDoc;
-        tempDoc.setMarkdown(editorText);
-        QString rawHtml = tempDoc.toHtml(); 
+    int index = tabsLayout->addTab(newTab, QString("Tab %1").arg(tabsLayout->count() + 1));
+    tabsLayout->setCurrentIndex(index);
 
-        QRegularExpression qtBlockquoteRegex("<p style=\" margin-top:[^;]+; margin-bottom:[^;]+; margin-left:40px; margin-right:40px; [^\"]*\">(.*?)</p>");
+    if (newTab && newTab->getEditor()) {
+        QString lineEndingChar = settings->value("editor/lineEndings", "\n").toString();
+        bool useLineWrapping = settings->value("editor/enableLineWrapping", true).toBool();
 
-        QString tableReplacement =
-        "<table width=\"100%\" cellpadding=\"8\" style=\"margin: 6px 0px;\">"
-        "<tr><td bgcolor=\"#f0f0f0\" style=\"border-left: 4px solid #007acc;\">"
-        "<span style=\"color: #555555;\">\\1</span>"
-        "</td></tr>"
-        "</table>";
+        MainWindow::updateFontPointSize(
+            settings->value("editor/fontSize", 10).toInt(),
+            settings->value("render/fontSize", 12).toInt()
+        );
 
-        rawHtml.replace(qtBlockquoteRegex, tableReplacement);
-
-        QRegularExpression qtCodeRegex(R"(((?:<pre[^>]*>(?:<span[^>]*>)?[\s\S]*?(?:</span>)?</pre>\s*)+))");
-        QRegularExpressionMatchIterator i = qtCodeRegex.globalMatch(rawHtml);
-
-        QList<QRegularExpressionMatch> matches;
-        while (i.hasNext()) matches.append(i.next());
-
-        for (int idx = matches.size() - 1; idx >= 0; --idx) {
-            const QRegularExpressionMatch &match = matches.at(idx);
-            QString fullBlock = match.captured(1);
-
-            QRegularExpression tagCleaner(R"(</?(?:pre|span|br)[^>]*>)");
-            QString cleanText = fullBlock;
-            cleanText.remove(tagCleaner);
-
-            cleanText.replace("\n", "<br />");
-
-
-            QString codeReplacement =
-            "<table border=\"0\" cellspacing=\"0\" cellpadding=\"10\" bgcolor=\"#f4f4f5\" style=\"border: 1px solid #e4e4e7; border-radius: 4px; margin: 10px 0;\">"
-            "<tr><td>"
-            "<pre style=\"margin: 0; font-family: 'Hack', monospace; color: #27272a; font-size: 13px; line-height: 1.5; width: 100%; white-space: pre-wrap;\">"
-            + cleanText +
-            "</pre>"
-            "</td></tr>"
-            "</table>";
-
-            rawHtml.replace(match.capturedStart(0), match.capturedLength(0), codeReplacement);
-
-        }
-
-        mdView->setHtml(rawHtml);
-    } else {
-        this->renderingLabel->setText("Viewing as HTML");
-
-        mdView->setHtml(editorText);
+        newTab->getEditor()->setLineWrapMode((useLineWrapping == true) ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
     }
 
-    unsavedFileChanges = true;
-    MainWindow::updateWindowTitle();
+    refreshTabTitles();
+}
 
-    int wordCount = countWords();
-    QString wcLabelText = QString("Words: %1").arg(wordCount);
-    wcLabel->setText(wcLabelText);
+void MainWindow::closeTab(const int &index)
+{
+    QWidget *deleteTab = tabsLayout->widget(index);
+    tabsLayout->removeTab(index);
+    deleteTab->deleteLater();
+
+    if (tabsLayout->count() == 0) createTab();
+
+    refreshTabTitles();
+}
+
+void MainWindow::refreshTabTitles()
+{
+    for (int i = 0; i < tabsLayout->count(); ++i) {
+        tabsLayout->setTabText(i, QString("Tab %1").arg(i + 1));
+    }
 }
 
 void MainWindow::updateWindowTitle()
 {
-    QString displayPath = currentFilePath.isEmpty() ? "Untitled" : QFileInfo(currentFilePath).fileName();
+    QString displayPath = currentTab()->getCurrentFilePath().isEmpty() ? "Untitled" : QFileInfo(currentTab()->getCurrentFilePath()).fileName();
 
     if (unsavedFileChanges == true)
         displayPath += "*";
@@ -476,16 +441,19 @@ void MainWindow::updateWindowTitle()
 // Pass -1 for any value to skip its font point size change
 void MainWindow::updateFontPointSize(const int &editorSize, const int &renderSize)
 {
-    if (editorSize != -1) {
-        QFont font = editor->font();
-        font.setPointSize(editorSize);
-        editor->setFont(font);
-    }
+    for (int i = 0; i < tabsLayout->count(); ++i) {
+        Tab *tab = qobject_cast<Tab*>(tabsLayout->widget(i));
+        if (!tab) continue;
 
-    if (renderSize != -1) {
-        QFont docFont = mdView->font();
-        docFont.setPointSize(renderSize);
-        mdView->setFont(docFont);
+        if (editorSize != -1) {
+            QFont font = tab->getEditor()->font();
+            font.setPointSize(editorSize);
+            tab->getEditor()->setFont(font);
+        }
+
+        if (renderSize != -1) {
+            tab->updateRenderFontSize(renderSize);
+        }
     }
 }
 
@@ -504,7 +472,12 @@ void MainWindow::initSettingVars()
         settings->value("render/fontSize", 12).toInt()
     );
 
-    this->editor->setLineWrapMode((useLineWrapping == true) ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
+    for (int i = 0; i < tabsLayout->count(); ++i) {
+        Tab *tab = qobject_cast<Tab*>(tabsLayout->widget(i));
+        if (!tab) return;
+
+        tab->getEditor()->setLineWrapMode((useLineWrapping == true) ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
+    }
 }
 
 void MainWindow::showSettingsMenu()
@@ -615,7 +588,13 @@ void MainWindow::showSettingsMenu()
         settings->setValue("editor/enableLineWrapping", state == Qt::Checked);
         settings->sync();
         useLineWrapping = (state == Qt::Checked);
-        this->editor->setLineWrapMode((useLineWrapping == true) ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
+
+        for (int i = 0; i < tabsLayout->count(); ++i) {
+            Tab *tab = qobject_cast<Tab*>(tabsLayout->widget(i));
+            if (!tab) return;
+
+            tab->getEditor()->setLineWrapMode((useLineWrapping == true) ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
+        }
     });
 
     connect(funFactsCheck, &QCheckBox::checkStateChanged, [this](Qt::CheckState state) {
@@ -629,6 +608,9 @@ void MainWindow::showSettingsMenu()
 
 void MainWindow::formatHandler(const QString &format)
 {
+    if (!MainWindow::currentTab() || !MainWindow::currentTab()->getEditor()) return;
+    QTextEdit * editor = MainWindow::currentTab()->getEditor();
+
     QTextCursor cursor = editor->textCursor();
 
     if (format == "bold" || format == "italic" || format == "strikethrough" || format == "inline code") {
@@ -836,26 +818,6 @@ void MainWindow::openLink(const QUrl &link)
     }
 }
 
-int MainWindow::countWords()
-{
-    QTextDocument doc;
-    doc.setMarkdown(editor->toPlainText());
-
-    QString text = doc.toPlainText();
-    QStringList words = text.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
-
-    return words.size();
-}
-
-void MainWindow::updatePosLabel() {
-    QTextCursor cur = editor->textCursor();
-
-    QString line = QString::number(cur.blockNumber() + 1);
-    QString col = QString::number(cur.positionInBlock() + 1);
-
-    posLabel->setText(QString("%1, %2").arg(line, col));
-}
-
 void MainWindow::alertUser(QWidget *parent, QMessageBox::Icon boxType, const QString &title, const QString &text)
 {
     QMessageBox msgBox(boxType, title, text, QMessageBox::Ok, parent);
@@ -884,47 +846,6 @@ bool MainWindow::isTextFile(const QString &filePath)
     return false;
 }
 
-void MainWindow::handleRenderVisibility(const QString &filePath)
-{
-    QMimeDatabase db;
-    QMimeType mime = db.mimeTypeForFile(filePath);
-    QString mimeName = mime.name();
-
-    if (filePath.endsWith(".md", Qt::CaseInsensitive) ||
-        filePath.endsWith(".markdown", Qt::CaseInsensitive)) {
-        mimeName = "text/markdown";
-    } else if (filePath.endsWith(".html", Qt::CaseInsensitive) ||
-               filePath.endsWith(".htm", Qt::CaseInsensitive)) {
-        mimeName = "text/html";
-    }
-
-    if (mimeName == "text/markdown") {
-        renderable = true;
-        isHtml = false;
-        this->mdView->setVisible(true);
-        this->renderingLabel->setText("");
-    }
-    else if (mimeName == "text/html") {
-        renderable = true;
-        isHtml = true;
-        this->mdView->setVisible(true);
-        this->renderingLabel->setText("Viewing as HTML");
-    }
-    // Code files
-    else if (mime.inherits("text/plain")) {
-        renderable = false;
-        isHtml = false;
-        this->mdView->setVisible(false);
-        this->renderingLabel->setText("Viewing as plain text (Markdown rendering disabled for this file type)");
-    }
-    else {
-        renderable = false;
-        isHtml = false;
-        this->mdView->setVisible(false);
-        this->renderingLabel->setText("Viewing as plain text (Markdown rendering disabled for this file type)");
-    }
-}
-
 QString MainWindow::replaceLineEndings(const QString &content)
 {
     QString result = content;
@@ -947,7 +868,7 @@ void MainWindow::autoSaveHandler()
 
     connect(autoSaveTimer, &QTimer::timeout, this, [this]() {
         if (autoSaveInterval == -1) return;
-        if (!currentFilePath.isEmpty()) MainWindow::handleSaveFile();
+        if (!currentTab()->getCurrentFilePath().isEmpty()) MainWindow::handleSaveFile("One");
         else {
             this->statusBar->clearMessage();
             this->statusBar->showMessage(QString("Save file to enable autosave!"), 3000);
@@ -961,59 +882,77 @@ void MainWindow::autoSaveHandler()
 
 void MainWindow::handleOpenFile()
 {
+    MainWindow::createTab();
+ 
+    Tab *tab = MainWindow::currentTab();
+    int idx =  tabsLayout->count() - 1;
+
+    QTextEdit *editor = tab->getEditor();
+
+    if (!editor) return;
+
+
 #ifdef Q_OS_WASM
     QFileDialog::getOpenFileContent("All files (*)", [this](const QString &fileName, const QByteArray &fileContent) {
-        if (fileName.isEmpty())
+        if (fileName.isEmpty()) {
+            MainWindow::closeTab(idx);
             return;
+        }
 
         if (!MainWindow::isTextFile(fileName)) {
+            MainWindow::closeTab(idx);
             return;
         }
 
         QString fileContents = QString::fromUtf8(fileContent);
 
-        MainWindow::handleRenderVisibility(fileName);
+        tab->handleRenderVisibility(fileName);
         editor->setPlainText(fileContents);
-        MainWindow::handleEditorInput();
+        tab->handleEditorInput();
 
         this->statusBar->clearMessage();
         this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileName), 3000);
 
         unsavedFileChanges = false;
-        currentFilePath = fileName;
+        tab->setCurrentFilePath(fileName);
         MainWindow::updateWindowTitle();
     });
 #else
+    QString currentFilePath = currentTab()->getCurrentFilePath();
     QString fileOpenPath = QFileDialog::getOpenFileName(this,
         tr("Open File"), // Window title
         !currentFilePath.isEmpty() ? currentFilePath : "document",
         tr("All Files (*)"));
 
-    if (fileOpenPath.isEmpty())
+    if (fileOpenPath.isEmpty()) {
+        MainWindow::closeTab(idx);
         return;
+    }
 
     if (!MainWindow::isTextFile(fileOpenPath)) {
+        MainWindow::closeTab(idx);
         return;
     }
 
     QFile file(fileOpenPath); 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         alertUser(this, QMessageBox::Critical, "Error", "Failed to open file. File is read only or not of text type.");
+        MainWindow::closeTab(idx);
         return;
     }
 
     QTextStream in(&file);
     QString fileContents = in.readAll(); 
 
-    MainWindow::handleRenderVisibility(fileOpenPath);
+    tab->handleRenderVisibility(fileOpenPath);
     editor->setPlainText(fileContents);
-    MainWindow::handleEditorInput();
+    tab->handleEditorInput();
 
     this->statusBar->clearMessage();
     this->statusBar->showMessage(QString("Successfully Opened %1").arg(fileOpenPath), 3000); 
 
     unsavedFileChanges = false;
-    currentFilePath = fileOpenPath;
+    tab->setCurrentFilePath(fileOpenPath);
     MainWindow::updateWindowTitle();
 #endif
 }
@@ -1021,6 +960,11 @@ void MainWindow::handleOpenFile()
 void MainWindow::handleSaveAsFile()
 {
     // This function should not be called from WASM
+
+    if (!MainWindow::currentTab() || !MainWindow::currentTab()->getEditor()) return;
+    QTextEdit *editor = MainWindow::currentTab()->getEditor();
+
+    QString currentFilePath = currentTab()->getCurrentFilePath();
 
     QString fileSavePath = QFileDialog::getSaveFileName(this,
         tr("Save File"),
@@ -1041,15 +985,33 @@ void MainWindow::handleSaveAsFile()
     this->statusBar->showMessage(QString("Successfully Saved as %1").arg(fileSavePath), 3000);
 
     unsavedFileChanges = false;
-    currentFilePath = fileSavePath;
+    currentTab()->setCurrentFilePath(fileSavePath);
     MainWindow::updateWindowTitle();
 
     QTextStream out(&file);
     out << MainWindow::replaceLineEndings(editor->toPlainText());
 }
 
-void MainWindow::handleSaveFile()
+void MainWindow::handleSaveFile(const QString &choice)
 {
+    if (choice == "All") {
+        for (int i = 0; i < tabsLayout->count(); ++i) {
+            Tab *tab = qobject_cast<Tab*>(tabsLayout->widget(i));
+
+            if (tab->getCurrentFilePath().isEmpty()) continue;
+
+            MainWindow::saveOneFile(*tab);
+        }
+    } else {
+        MainWindow::saveOneFile(*currentTab());
+    }
+}
+
+void MainWindow::saveOneFile(const Tab &tab)
+{
+    QTextEdit *editor = tab.getEditor();
+    QString currentFilePath = tab.getCurrentFilePath();
+
 #ifdef Q_OS_WASM
     QByteArray fileData = editor->toPlainText().toUtf8();
     QString hint = currentFilePath.isEmpty() ? "document.md" : currentFilePath;
@@ -1060,7 +1022,7 @@ void MainWindow::handleSaveFile()
     this->statusBar->showMessage(QString("Successfully Saved as %1").arg(hint), 3000);
 
     unsavedFileChanges = false;
-    currentFilePath = hint;
+    tab->setCurrentFilePath(hint);
     MainWindow::updateWindowTitle();
 #else
     if (currentFilePath.isEmpty()) {
@@ -1075,7 +1037,7 @@ void MainWindow::handleSaveFile()
     }
 
     this->statusBar->clearMessage();
-    this->statusBar->showMessage(QString("Saved %1").arg(currentFilePath), 1000);
+    this->statusBar->showMessage("Saved File(s)", 1000);
 
     unsavedFileChanges = false;
     MainWindow::updateWindowTitle();
@@ -1090,6 +1052,10 @@ void MainWindow::printDocument()
 #ifdef Q_OS_WASM
     emscripten_run_script("window.print();");
 #else
+    if (!MainWindow::currentTab() || !MainWindow::currentTab()->getEditor()) return;
+    QTextEdit *editor = MainWindow::currentTab()->getEditor();
+    MdezDocBrowser *mdView = MainWindow::currentTab()->getMdView();
+
     QPrinter printer(QPrinter::HighResolution);
 
     QPrintDialog printDialog(&printer, this);
@@ -1105,6 +1071,9 @@ void MainWindow::printDocument()
 
 void MainWindow::exportHtml()
 {
+    if (!MainWindow::currentTab() || !MainWindow::currentTab()->getMdView()) return;
+    MdezDocBrowser *mdView = MainWindow::currentTab()->getMdView();
+
     QTextDocument *doc = mdView->document();
 
     QString htmlSavePath = QFileDialog::getSaveFileName(this,

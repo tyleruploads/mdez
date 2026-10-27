@@ -25,6 +25,8 @@ qt_add_executable(mdez
     src/main.cpp
     src/MainWindow.h
     src/MainWindow.cpp
+    src/Tab.h
+    src/Tab.cpp
     src/resources.qrc
 )
 
