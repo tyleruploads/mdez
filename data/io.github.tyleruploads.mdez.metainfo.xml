@@ -29,19 +29,19 @@ MDEZ++ (mdez) is an open-source, lightweight, cross-platform C++20 and Qt GUI Ma
     <screenshots>
         <screenshot type="default">
             <image>https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_readme.png</image>
-            <caption>MDEZ++, a Markdown editor, editing its own README file</caption>
+            <caption>Editing a README file</caption>
         </screenshot>
         <screenshot>
             <image>https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_apollo11.png</image>
-            <caption>MDEZ++, a Markdown editor, viewing the Technical Air-to-Ground Voice Transmission (GOSS NET 1) from the Apollo 11 mission</caption>
+            <caption>Viewing the Apollo 11 Transcript</caption>
         </screenshot>
         <screenshot>
             <image>https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_udhr.png</image>
-            <caption>MDEZ++, a Markdown editor, viewing the Universal Declaration of Human Rights</caption>
+            <caption>Viewing the Universal Declaration of Human Rights</caption>
         </screenshot>
         <screenshot>
             <image>https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_lipsum.png</image>
-            <caption>MDEZ++, a Markdown editor, editing a Lorem Ipsum document</caption>
+            <caption>Editing a Lorem Ipsum File</caption>
         </screenshot>
     </screenshots>
     <releases>
