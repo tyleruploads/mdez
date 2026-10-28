@@ -28,19 +28,19 @@ MDEZ++ (mdez) is an open-source, lightweight, cross-platform C++20 and Qt GUI Ma
     <content_rating type="oars-1.1" />
     <screenshots>
         <screenshot type="default">
-            <image xml:lang="en-US">https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_readme.png</image>
+            <image>https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_readme.png</image>
             <caption>MDEZ++, a Markdown editor, editing its own README file</caption>
         </screenshot>
         <screenshot>
-            <image xml:lang="en-US">https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_apollo11.png</image>
+            <image>https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_apollo11.png</image>
             <caption>MDEZ++, a Markdown editor, viewing the Technical Air-to-Ground Voice Transmission (GOSS NET 1) from the Apollo 11 mission</caption>
         </screenshot>
         <screenshot>
-            <image xml:lang="en-US">https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_udhr.png</image>
+            <image>https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_udhr.png</image>
             <caption>MDEZ++, a Markdown editor, viewing the Universal Declaration of Human Rights</caption>
         </screenshot>
         <screenshot>
-            <image xml:lang="en-US">https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_lipsum.png</image>
+            <image>https://raw.githubusercontent.com/tyleruploads/mdez/main/media/docs/screenshot_lipsum.png</image>
             <caption>MDEZ++, a Markdown editor, editing a Lorem Ipsum document</caption>
         </screenshot>
     </screenshots>
@@ -48,6 +48,11 @@ MDEZ++ (mdez) is an open-source, lightweight, cross-platform C++20 and Qt GUI Ma
         <release version="0.14.0" date="2026-10-24">
             <description>
                 <p>Initial Flatpak release of MDEZ++</p>
+            </description>
+        </release>
+        <release version="0.15.0" date="2026-10-26">
+            <description>
+                <p>Multiple document support has been added to MDEZ++</p>
             </description>
         </release>
     </releases>
