@@ -159,6 +159,17 @@ public:
     bool isAbsoluteFile = (name.isLocalFile() || name.scheme() == "file");
     bool isRelativeFile = name.isRelative() && !name.path().isEmpty();
 
+#ifdef Q_OS_WASM
+    if (isAbsoluteFile || isRelativeFile) {
+        QMessageBox::warning(
+            m_mainWindow,
+            tr("Feature Not Available in Web Version"),
+            tr("Due to browser security restrictions, opening local or relative file links from the document is not supported in the web (WASM) version of MDEZ++.")
+        );
+        return;
+    }
+#endif
+
     if (isAbsoluteFile || isRelativeFile) {
         Tab *previousTab = m_mainWindow->currentTab(); 
 
