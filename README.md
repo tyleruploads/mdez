@@ -7,6 +7,9 @@ MDEZ++ (mdez) is an **open-source, lightweight, cross-platform C++20 and Qt GUI 
 ![GitHub Release](https://img.shields.io/github/v/release/tyleruploads/mdez?label=Version)
 [![C++](https://img.shields.io/badge/C%2B%2B-20-%2300599C?logo=c%2B%2B)](https://isocpp.org/)
 [![Qt](https://img.shields.io/badge/Qt-6-%2341CD52?logo=qt&logoColor=white)](https://www.qt.io/)
+<a href='https://flathub.org/apps/io.github.tyleruploads.mdez'>
+    <img width='240' alt='Get it on Flathub' src='https://flathub.org/api/badge?locale=en'/>
+</a>
 
 <img src="./media/docs/screenshot_readme.png" alt="MDEZ++ C++20 and Qt Markdown editor interface with live preview" width="700"/>
 
@@ -105,10 +108,19 @@ If you do not know Markdown, you can make use of the **Format Menu,** which will
 
 ## Downloads & Installation
 
-Currently, **no installation is required**! All you need to do is download and open the appropriate **portable, pre-compiled binary** for your operating system or **open the website.**
-If you would like to install MDEZ++ instead of just running the portable binary and you use Linux, you can use the **Linux Setup Script.**
+Installation of MDEZ++ is very simple! All you need to do is download and open the appropriate **portable, pre-compiled binary** for your operating system. MDEZ++ is also on **Flathub**, the de-facto Linux App Store. Alternatively, can use the **MDEZ++ Setup Script for Linux,** which allows you either compile locally, or install the AppImage from the latest GitHub Release.
 
 > Certain features are not available in the Web download due to browser restrictions and other factors, such as choosing file save paths.
+
+### Install from Flathub
+
+MDEZ++ can be installed directly from [Flathub](https://flathub.org/en/apps/io.github.tyleruploads.mdez)!
+
+To install MDEZ++, simply run the following command in any terminal! The Flatpak CLI, setup with Flathub, is a prerequisite.
+
+```bash
+flatpak install flathub io.github.tyleruploads.mdez
+```
 
 ### Linux Setup Script
 
@@ -133,7 +145,7 @@ In the script, you have 4 options:
 
 | Linux | Windows | macOS | Web Download | Web Page |
 | :---: | :---:   | :---: | :---: | :---: |
-| [MDEZ++ AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage) | [MDEZ++ Windows Executable](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported | [MDEZ++ Web (WASM) Download](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-wasm.zip) | [MDEZ++ Web (WASM) on GitHub Pages](https://tyleruploads.github.io/mdez/)
+| [MDEZ++ AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage)<br>[Flathub Webpage](https://flathub.org/en/apps/io.github.tyleruploads.mdez)| [MDEZ++ Windows Executable](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported | [MDEZ++ Web (WASM) Download](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-wasm.zip) | [MDEZ++ Web (WASM) on GitHub Pages](https://tyleruploads.github.io/mdez/)
 
 #### Note for Linux Users
 
