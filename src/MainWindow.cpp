@@ -893,7 +893,7 @@ void MainWindow::handleOpenFile()
 
 
 #ifdef Q_OS_WASM
-    QFileDialog::getOpenFileContent("All files (*)", [this](const QString &fileName, const QByteArray &fileContent) {
+    QFileDialog::getOpenFileContent("All files (*)", [this, tab, idx, editor](const QString &fileName, const QByteArray &fileContent) {
         if (fileName.isEmpty()) {
             MainWindow::closeTab(idx);
             return;
@@ -1007,7 +1007,7 @@ void MainWindow::handleSaveFile(const QString &choice)
     }
 }
 
-void MainWindow::saveOneFile(const Tab &tab)
+void MainWindow::saveOneFile(Tab &tab)
 {
     QTextEdit *editor = tab.getEditor();
     QString currentFilePath = tab.getCurrentFilePath();
@@ -1022,7 +1022,7 @@ void MainWindow::saveOneFile(const Tab &tab)
     this->statusBar->showMessage(QString("Successfully Saved as %1").arg(hint), 3000);
 
     unsavedFileChanges = false;
-    tab->setCurrentFilePath(hint);
+    tab.setCurrentFilePath(hint);
     MainWindow::updateWindowTitle();
 #else
     if (currentFilePath.isEmpty()) {

@@ -71,7 +71,7 @@ private slots:
   void handleOpenFile();
   void handleSaveAsFile();
   void handleSaveFile(const QString &choice);
-  void saveOneFile(const Tab &tab);
+  void saveOneFile(Tab &tab);
   void printDocument();
   void exportHtml();
 
