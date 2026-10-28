@@ -45,16 +45,16 @@ MDEZ++ (mdez) is an open-source, lightweight, cross-platform C++20 and Qt GUI Ma
         </screenshot>
     </screenshots>
     <releases>
-        <release version="0.14.0" date="2026-10-24">
-            <description>
-                <p>Initial Flatpak release of MDEZ++</p>
-            </description>
-        </release>
         <release version="0.15.0" date="2026-10-26">
             <description>
                 <p>Multiple document support has been added to MDEZ++</p>
             </description>
         </release>
+        <release version="0.14.0" date="2026-10-24">
+            <description>
+                <p>Initial Flatpak release of MDEZ++</p>
+            </description>
+        </release> 
     </releases>
     <launchable type="desktop-id">io.github.tyleruploads.mdez.desktop</launchable>
 </component>
