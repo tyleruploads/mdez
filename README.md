@@ -8,7 +8,7 @@ MDEZ++ (mdez) is an **open-source, lightweight, cross-platform C++20 and Qt GUI 
 [![C++](https://img.shields.io/badge/C%2B%2B-20-%2300599C?logo=c%2B%2B)](https://isocpp.org/)
 [![Qt](https://img.shields.io/badge/Qt-6-%2341CD52?logo=qt&logoColor=white)](https://www.qt.io/)
 <a href='https://flathub.org/apps/io.github.tyleruploads.mdez'>
-    <img width='240' alt='Get it on Flathub' src='https://flathub.org/api/badge?locale=en'/>
+    <img width='100' alt='Get it on Flathub' src='https://flathub.org/api/badge?locale=en'/>
 </a>
 
 <img src="./media/docs/screenshot_readme.png" alt="MDEZ++ C++20 and Qt Markdown editor interface with live preview" width="700"/>
