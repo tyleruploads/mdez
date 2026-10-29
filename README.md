@@ -13,6 +13,14 @@ MDEZ++ (mdez) is an **open-source, lightweight, cross-platform C++20 and Qt GUI 
 
 <img src="./media/docs/screenshot_readme.png" alt="MDEZ++ C++20 and Qt Markdown editor interface with live preview" width="700"/>
 
+## Features
+
+- **Smart View:** Automatically switches between live-previews of Markdown or HTML or a single-pane plaintext editor based on file MIME type.
+- **WebAssembly (WASM) Support:** Supports WebAssembly, allowing MDEZ++ to be run in the browser.
+- **Multi-Format Output Support:** No matter what you are editing, you can always print it!
+- **Metadata in Status Bar:** View important information such as the version, word count, position in text, and file path in the status bar!
+- **Fun Facts:** View interesting fun facts at the start of the program and by finding them in the Help menu.
+
 ## Usage
 
 Write raw Markdown or HTML on the left to **preview** rendered text on the right. You can also edit **any other text-based file type.** Examples of these file types include normal text files, code files (e.g., `.cpp`), JSON files, and more! If a preview is not available, the right side will automatically be hidden.
@@ -82,14 +90,6 @@ If you do not know what to do with the zip file, follow these steps.
     + Click More Info under the text
     + Click the Run Anyway button at the bottom
     + Note: This is normal behavior for open-source software not signed with a commercial Microsoft developer key
-
-## Features
-
-- **Smart View:** Automatically switches between live-previews of Markdown or HTML or a single-pane plaintext editor based on file MIME type.
-- **WebAssembly (WASM) Support:** Supports WebAssembly, allowing MDEZ++ to be run in the browser.
-- **Multi-Format Output Support:** No matter what you are editing, you can always print it!
-- **Metadata in Status Bar:** View important information such as the version, word count, position in text, and file path in the status bar!
-- **Fun Facts:** View interesting fun facts at the start of the program and by finding them in the Help menu.
 
 ## Keyboard Shortcuts
 
