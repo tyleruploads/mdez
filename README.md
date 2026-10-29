@@ -21,90 +21,7 @@ If you do not know Markdown, you can make use of the **Format Menu,** which will
 
 > **New to Markdown?** Check out this [cheat sheet](https://dev.to/thetylern/a-markdown-cheat-sheet-for-anywhere-32bp)!
 
-### Keyboard Shortcuts
-
-> Select text and apply a formatting shortcut to apply the styling found in the Format menu directly to the selected text. If no text is selected, the Markdown syntax for the format will be applied and your cursor will be moved so that you can instantly continue typing.
-
-| Action | Shortcut | Description |
-| :---: | :---: | :---: |
-| Open File | `Ctrl / Cmd + O` | Open an existing document |
-| Save As | `Ctrl / Cmd + Shift + S` | Save the current document under a new name or location |
-| Save | `Ctrl / Cmd + S` | Save changes to the current document |
-| Print | `Ctrl + P` | Print the current document |
-| Bold | `Ctrl+B` | Insert bold text |
-| Italic | `Ctrl+I` | Insert italicized text |
-| Heading 1 | `Ctrl+Alt+1` | Insert a level one heading |
-| Heading 2 | `Ctrl+Alt+2` | Insert a level two heading |
-| Heading 3 | `Ctrl+Alt+3` | Insert a level three heading |
-| Horizontal Divider | `Ctrl+D` | Insert horizontal divider |
-| Block Quote | `Ctrl+]` | Insert a block quote |
-| Strikethrough | `Alt+Shift+5` | Insert strikethrough text |
-| Link | `Ctrl+K` | Insert a link |
-| Image | `Ctrl+Shift+I` | Insert an image |
-| Code | `Ctrl+\` | Insert a code block |
-| Inline Code | `Ctrl+E` | Insert inline code |
-| Undo | `Ctrl+Z` | Undo latest change done to text |
-| Redo | `Ctrl+Shift+Z` | Redo latest change to text |
-| Copy | `Ctrl+C` | Copy selected text to clipboard |
-| Paste | `Ctrl+V` | Paste text from clipboard |
-| Cut | `Ctrl+X` | Move selected text to clipboard |
-| Select All | `Ctrl+A` | Select all text from editor |
-
-### Menu Tree
-
-#### File
-
-* `Open File` (`Ctrl+Shift+O`) — Open an existing document
-* `Save As` (`Ctrl+Shift+S`) — **(NOT SUPPORTED ON WEB)** Save the current document under a new name or location
-* `Save` (`Ctrl+S`) — Save changes to the current document
-* `Print` (`Ctrl+P`) — **(NOT RELIABLE ON WEB)** Print the current document
-* `Export as HTML` (`No combination`) — Export the current document under the HTML format
-
-#### Edit
-
-* `Undo` (`Ctrl+Z`) — Undo latest change to text
-* `Redo` (`Ctrl+Shift+Z`) — Redo latest change to text
-* `Copy` (`Ctrl+C`) — Copy selected text to clipboard
-* `Paste` (`Ctrl+V`) — Paste text from clipboard
-* `Cut` (`Ctrl+X`) — Move selected text to clipboard
-* `Select All` (`Ctrl+A`) — Select all text from editor
-
-#### Help
-
-* `About MDEZ++` — Displays legal information about MDEZ++ and the Qt Framework
-* `MDEZ++ License` — Displays the full MDEZ++ License
-* `About Qt` — Displays more in-depth legal information about the Qt Framework
-* `Fun Facts!` — Shows fun facts
-* `Markdown Cheat Sheet` — Opens a link to [A Markdown Cheat Sheet for Anywhere by tyleruploads on DEV](https://dev.to/thetylern/a-markdown-cheat-sheet-for-anywhere-32bp) 
-* `Keyboard Combinations` — Displays keyboard combinations for MDEZ++
-* `Report Issue` — Opens a link to [report an issue in MDEZ++ via GitHub](https://github.com/tyleruploads/mdez/issues/new)
-* `Check for Updates` — Opens a link to [the latest GitHub release of MDEZ++](https://github.com/tyleruploads/mdez/releases/latest)
-
-#### Format
-
-* `Bold` (`Ctrl+B`) — Insert bold text
-* `Italic` (`Ctrl+I`) — Insert italicized text
-* `Heading 1` (`Ctrl+Alt+1`) — Insert a level 1 heading
-* `Heading 2` (`Ctrl+Alt+2`) — Insert a level 2 heading
-* `Heading 3` (`Ctrl+Alt+3`) — Insert a level 3 heading
-* `Horizontal Divider` (`Ctrl+D`) — Insert a horizontal divider
-* `Block Quote` (`Ctrl+]`) — Insert a block quote
-* `Strikethrough` (`Alt+Shift+5`) — Insert strikethrough text
-* `Link` (`Ctrl+K`) — Insert a link
-* `Image` (`Ctrl+Shift+I`) — Insert an image
-* `Code` (`Ctrl+\`) — Insert a code block
-* `Inline Code` (`Ctrl+E`) — Insert inline code
-
-#### Settings
-
-> These settings persist automatically via local configuration files or browser local storage
-
-* `Autosave (Seconds)` — **(NOT SUPPORTED ON WEB)** Enable or disable autosave and set the autosave interval
-* `Font Size for Editor` — Set the font point size for the editor
-* `Relative Font Size for Render (based on Body Text)` — Set the font point size of the render relative to the body text point size
-* `End of Line Character` — Choose between Windows style `\r\n` and UNIX/macOS style `\n` line endings
-* `Enable Line Wrapping in Editor` — Enable or disable line wrapping in the editor
-* `Show fun facts after application initialization` — Enable or disable the showing of fun facts automatically after application initialization
+> See [Keyboard Shortcuts](#keyboard-shortcuts) and [Menu Tree](#menu-tree) for important menu and shortcut information
 
 ## Downloads & Installation
 
@@ -173,6 +90,92 @@ If you do not know what to do with the zip file, follow these steps.
 - **Multi-Format Output Support:** No matter what you are editing, you can always print it!
 - **Metadata in Status Bar:** View important information such as the version, word count, position in text, and file path in the status bar!
 - **Fun Facts:** View interesting fun facts at the start of the program and by finding them in the Help menu.
+
+## Keyboard Shortcuts
+
+> Select text and apply a formatting shortcut to apply the styling found in the Format menu directly to the selected text. If no text is selected, the Markdown syntax for the format will be applied and your cursor will be moved so that you can instantly continue typing.
+
+| Action | Shortcut | Description |
+| :---: | :---: | :---: |
+| Open File | `Ctrl / Cmd + O` | Open an existing document |
+| Save As | `Ctrl / Cmd + Shift + S` | Save the current document under a new name or location |
+| Save | `Ctrl / Cmd + S` | Save changes to the current document |
+| Print | `Ctrl + P` | Print the current document |
+| Bold | `Ctrl+B` | Insert bold text |
+| Italic | `Ctrl+I` | Insert italicized text |
+| Heading 1 | `Ctrl+Alt+1` | Insert a level one heading |
+| Heading 2 | `Ctrl+Alt+2` | Insert a level two heading |
+| Heading 3 | `Ctrl+Alt+3` | Insert a level three heading |
+| Horizontal Divider | `Ctrl+D` | Insert horizontal divider |
+| Block Quote | `Ctrl+]` | Insert a block quote |
+| Strikethrough | `Alt+Shift+5` | Insert strikethrough text |
+| Link | `Ctrl+K` | Insert a link |
+| Image | `Ctrl+Shift+I` | Insert an image |
+| Code | `Ctrl+\` | Insert a code block |
+| Inline Code | `Ctrl+E` | Insert inline code |
+| Undo | `Ctrl+Z` | Undo latest change done to text |
+| Redo | `Ctrl+Shift+Z` | Redo latest change to text |
+| Copy | `Ctrl+C` | Copy selected text to clipboard |
+| Paste | `Ctrl+V` | Paste text from clipboard |
+| Cut | `Ctrl+X` | Move selected text to clipboard |
+| Select All | `Ctrl+A` | Select all text from editor |
+
+## Menu Tree
+
+#### File
+
+* `Open File` (`Ctrl+Shift+O`) — Open an existing document
+* `Save As` (`Ctrl+Shift+S`) — **(NOT SUPPORTED ON WEB)** Save the current document under a new name or location
+* `Save` (`Ctrl+S`) — Save changes to the current document
+* `Print` (`Ctrl+P`) — **(NOT RELIABLE ON WEB)** Print the current document
+* `Export as HTML` (`No combination`) — Export the current document under the HTML format
+
+#### Edit
+
+* `Undo` (`Ctrl+Z`) — Undo latest change to text
+* `Redo` (`Ctrl+Shift+Z`) — Redo latest change to text
+* `Copy` (`Ctrl+C`) — Copy selected text to clipboard
+* `Paste` (`Ctrl+V`) — Paste text from clipboard
+* `Cut` (`Ctrl+X`) — Move selected text to clipboard
+* `Select All` (`Ctrl+A`) — Select all text from editor
+
+#### Help
+
+* `About MDEZ++` — Displays legal information about MDEZ++ and the Qt Framework
+* `MDEZ++ License` — Displays the full MDEZ++ License
+* `About Qt` — Displays more in-depth legal information about the Qt Framework
+* `Fun Facts!` — Shows fun facts
+* `Markdown Cheat Sheet` — Opens a link to [A Markdown Cheat Sheet for Anywhere by tyleruploads on DEV](https://dev.to/thetylern/a-markdown-cheat-sheet-for-anywhere-32bp) 
+* `Keyboard Combinations` — Displays keyboard combinations for MDEZ++
+* `Report Issue` — Opens a link to [report an issue in MDEZ++ via GitHub](https://github.com/tyleruploads/mdez/issues/new)
+* `Check for Updates` — Opens a link to [the latest GitHub release of MDEZ++](https://github.com/tyleruploads/mdez/releases/latest)
+
+#### Format
+
+* `Bold` (`Ctrl+B`) — Insert bold text
+* `Italic` (`Ctrl+I`) — Insert italicized text
+* `Heading 1` (`Ctrl+Alt+1`) — Insert a level 1 heading
+* `Heading 2` (`Ctrl+Alt+2`) — Insert a level 2 heading
+* `Heading 3` (`Ctrl+Alt+3`) — Insert a level 3 heading
+* `Horizontal Divider` (`Ctrl+D`) — Insert a horizontal divider
+* `Block Quote` (`Ctrl+]`) — Insert a block quote
+* `Strikethrough` (`Alt+Shift+5`) — Insert strikethrough text
+* `Link` (`Ctrl+K`) — Insert a link
+* `Image` (`Ctrl+Shift+I`) — Insert an image
+* `Code` (`Ctrl+\`) — Insert a code block
+* `Inline Code` (`Ctrl+E`) — Insert inline code
+
+#### Settings
+
+> These settings persist automatically via local configuration files or browser local storage
+
+* `Autosave (Seconds)` — **(NOT SUPPORTED ON WEB)** Enable or disable autosave and set the autosave interval
+* `Font Size for Editor` — Set the font point size for the editor
+* `Relative Font Size for Render (based on Body Text)` — Set the font point size of the render relative to the body text point size
+* `End of Line Character` — Choose between Windows style `\r\n` and UNIX/macOS style `\n` line endings
+* `Enable Line Wrapping in Editor` — Enable or disable line wrapping in the editor
+* `Show fun facts after application initialization` — Enable or disable the showing of fun facts automatically after application initialization
+
 
 ## Contributing
 
