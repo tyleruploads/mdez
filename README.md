@@ -15,9 +15,16 @@ MDEZ++ (mdez) is an **open-source, lightweight, cross-platform C++20 and Qt GUI 
 
 ## Features
 
+- **Cross-Platform Availability:** Available on Linux, Windows, and Web through automated builds of Linux `.AppImage` files, Windows `.exe` files, and WebAssembly (WASM) files, alongside an official package on Flathub
+- **The Need for Speed:** Built on C++20 and the Qt Framework, MDEZ++ makes speed never be an issue
 - **Smart View:** Automatically switches between live-previews of Markdown or HTML or a single-pane plaintext editor based on file MIME type.
-- **WebAssembly (WASM) Support:** Supports WebAssembly, allowing MDEZ++ to be run in the browser.
-- **Multi-Format Output Support:** No matter what you are editing, you can always print it!
+- **Multi-Tab Support:** Edit as many files as you want simultaneously with support for theoretically up to 2,147,483,647 tabs! That's a lot of documents!
+- **Important Settings:** Change only the most important settings in the settings menu
+- **Format Menu:** Apply Markdown syntax without any skill required! Keyboard shortcuts are also configured to let you do this without even touching the menu.
+- **Universal Text Support:** MDEZ++ is not just limited to Markdown! It supports every single plaintext file type, including code files (i.e. `.cpp`) and data files (i.e. `.json`). HTML documents are also rendered, not just Markdown!
+- **Extensive Keyboard Hotkeys:** Just about as many hotkeys as you could ever think of are supported in MDEZ++
+- **Multi-Format Output Support:** No matter what you are editing, you can always print it! You can also export it to HTML!
+- **Autosave:** MDEZ++ supports configurable autosave
 - **Metadata in Status Bar:** View important information such as the version, word count, position in text, and file path in the status bar!
 - **Fun Facts:** View interesting fun facts at the start of the program and by finding them in the Help menu.
 
