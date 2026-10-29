@@ -131,7 +131,7 @@ If you do not know what to do with the zip file, follow these steps.
 
 #### File
 
-* `Open File` (`Ctrl+Shift+O`) — Open an existing document
+* `Open File` (`Ctrl+O`) — Open an existing document
 * `Save As` (`Ctrl+Shift+S`) — **(NOT SUPPORTED ON WEB)** Save the current document under a new name or location
 * `Save` (`Ctrl+S`) — Save changes to the current document
 * `Print` (`Ctrl+P`) — **(NOT RELIABLE ON WEB)** Print the current document
