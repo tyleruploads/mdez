@@ -22,7 +22,7 @@ jobs:
             artifact_path: build/MDEZ++-x86_64.AppImage
           - os: windows-latest
             target_name: mdez-windows
-            binary_path: build/Release/mdez-windows.exe
+            binary_path: build/Release/mdez.exe
             artifact_path: build/Release/mdez-windows.zip
           - os: ubuntu-22.04
             target_name: mdez-wasm
