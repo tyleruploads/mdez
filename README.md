@@ -145,7 +145,7 @@ In the script, you have 4 options:
 
 | Linux | Windows | macOS | Web Download | Web Page |
 | :---: | :---:   | :---: | :---: | :---: |
-| [MDEZ++ AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage)<br>[Flathub Webpage](https://flathub.org/en/apps/io.github.tyleruploads.mdez)| [MDEZ++ Windows Executable](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported | [MDEZ++ Web (WASM) Download](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-wasm.zip) | [MDEZ++ Web (WASM) on GitHub Pages](https://tyleruploads.github.io/mdez/)
+| [MDEZ++ AppImage](https://github.com/tyleruploads/mdez/releases/latest/download/MDEZ++-x86_64.AppImage)<br />[Flathub Webpage](https://flathub.org/en/apps/io.github.tyleruploads.mdez)| [MDEZ++ Windows Executable](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-windows.zip)| Not Supported | [MDEZ++ Web (WASM) Download](https://github.com/tyleruploads/mdez/releases/latest/download/mdez-wasm.zip) | [MDEZ++ Web (WASM) on GitHub Pages](https://tyleruploads.github.io/mdez/)
 
 #### Note for Linux Users
 
