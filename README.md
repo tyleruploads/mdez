@@ -186,10 +186,10 @@ If you do not know what to do with the zip file, follow these steps.
 
 ## Contributing
 
-Contributions are what make open-source projects important. All contributions are highly appreciated
+Contributions are what make open-source projects important. All contributions are highly appreciated.
 
-* **Found a bug or issue**: Open an Issue and show the output of the script, the steps to reproduce it, and as much information as possible
-* **Have an idea**: Open an Issue and explain your idea as much as possible, why you think it would be a good addition to the project, and any other important information.
+* **Found a bug or issue**: Open an Issue and throughly explain the problem, the steps to reproduce it, your operating system and the method you used to install MDEZ++, and all other relevant information that helps the problem get corrected
+* **Have an idea**: Open an Issue and explain your idea as much as possible, why you think it would be a good addition to MDEZ++, and any other important information.
 
 ## Security
 
