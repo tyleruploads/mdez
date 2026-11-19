@@ -252,6 +252,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     newTabButton->setToolTip("Open New Tab");
     newTabButton->setStyleSheet("margin: 4px; padding: 2px 6px;");
     tabsLayout->setCornerWidget(newTabButton, Qt::TopRightCorner);
+
+    newTabButton->setShortcut(QKeySequence("Ctrl+T"));
  
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
